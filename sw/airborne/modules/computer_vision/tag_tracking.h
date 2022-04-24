@@ -20,28 +20,33 @@
 
 /** @file "modules/tracking/tag_tracking.h"
  * @author Gautier Hattenberger <gautier.hattenberger@enac.fr>
- * Track poistion of a tag (ArUco, QRcode, ...) detected by an onboard camera
- * The tag detection and pose computation is done outside of the module, only the estimation
- * by fusion of AHRS and visual detection with a Kalman filter is performed in this module
+ * Filter the position of a tag (ArUco, QRcode, ...) detected by an onboard camera
+ * The tag detection and pose computation is done outside of the module,
+ * only the estimation by fusion of AHRS and visual detection with a Kalman filter
+ * is performed in this module
  */
 
 #ifndef TAG_TRACKING_H
 #define TAG_TRACKING_H
 
 #include "std.h"
+#include "math/pprz_algebra_float.h"
 
+// Searching status
 #define TAG_TRACKING_SEARCHING  0
 #define TAG_TRACKING_RUNNING    1
 #define TAG_TRACKING_LOST       2
 
+// Type of tag motion
+// If fixed, the speed correction is forced to zero
+#define TAG_TRACKING_FIXED_POS  0
+#define TAG_TRACKING_MOVING     1
+
 struct tag_tracking_public {
-  float cmd_roll;     ///< roll command [rad]
-  float cmd_pitch;    ///< pitch command [rad]
-  float cmd_climb;    ///< vertical speed command [m/s]
-  float kp;           ///< horizontal proportional gain
-  float kd;           ///< horizontal derivative gain
-  float kp_climb;     ///< vertical proportional gain
-  uint8_t status;     ///< tracking status flag
+  struct FloatVect3 pos;        ///< estimated position
+  struct FloatVect3 speed;      ///< estimated speed
+  uint8_t status;               ///< tracking status flag
+  uint8_t motion_type;          ///< type of tag motion
 };
 
 extern struct tag_tracking_public tag_tracking;

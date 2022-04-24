@@ -25,7 +25,7 @@
  * Basic kinematic kalman filter for tag tracking and constant speed
  */
 
-#include "modules/tracking/simple_kinematic_kalman.h"
+#include "filters/simple_kinematic_kalman.h"
 #include <math.h>
 
 void simple_kinematic_kalman_init(struct SimpleKinematicKalman *kalman, float P0_pos, float P0_speed, float Q_sigma2,
@@ -249,7 +249,7 @@ static void simple_kinematic_kalman_update(struct SimpleKinematicKalman *kalman,
 void simple_kinematic_kalman_update_pos(struct SimpleKinematicKalman *kalman, struct FloatVect3 pos)
 {
   // measurement vector
-  float Z[3] = { target.x, target.y, target.z };
+  float Z[3] = { pos.x, pos.y, pos.z };
   // position observation matrix
   MAKE_MATRIX_PTR(_H, kalman->Hp, 3);
 
