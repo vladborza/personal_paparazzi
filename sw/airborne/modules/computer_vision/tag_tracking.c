@@ -27,6 +27,7 @@
  */
 
 #include "modules/computer_vision/tag_tracking.h"
+#include "modules/sensors/cameras/jevois.h"
 #include "filters/simple_kinematic_kalman.h"
 #include "generated/modules.h"
 #include "state.h"

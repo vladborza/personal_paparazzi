@@ -12,6 +12,9 @@
       </dl_settings>
     </dl_settings>
   </settings>
+  <dep>
+    <depends>jevois</depends>
+  </dep>
   <header>
     <file name="tag_tracking.h"/>
   </header>
