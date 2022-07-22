@@ -40,14 +40,14 @@
 #define TAG_TRACKING_WP WP_TAG
 #endif
 
-#if defined SITL
-static void tag_tracking_sim(void);
-static void tag_motion_sim(void);
-
-// use WP_TARGET by default
+// use WP_TARGET by default for simulation
 #if !(defined TAG_TRACKING_SIM_WP) && (defined WP_TARGET)
 #define TAG_TRACKING_SIM_WP WP_TARGET
 #endif
+
+#if defined SITL && defined TAG_TRACKING_SIM_WP
+static void tag_tracking_sim(void);
+static void tag_motion_sim(void);
 
 // select print function for debug
 #include <stdio.h>
@@ -102,8 +102,8 @@ float speed_circle = 0.03;
 #define TAG_TRACKING_CAM_POS_Z 0.f
 #endif
 
-#ifndef TAG_TRACKING_PIXEL_TO_M
-#define TAG_TRACKING_PIXEL_TO_M (1.f / 1000.f)
+#ifndef TAG_TRACKING_COORD_TO_M
+#define TAG_TRACKING_COORD_TO_M (1.f / 1000.f)
 #endif
 
 #ifndef TAG_TRACKING_R
@@ -160,9 +160,9 @@ static void tag_track_cb(uint8_t sender_id UNUSED,
 {
   if (type == JEVOIS_MSG_D3) {
     // store data from Jevois detection
-    tag_track_private.meas.x = coord[0] * TAG_TRACKING_PIXEL_TO_M;
-    tag_track_private.meas.y = coord[1] * TAG_TRACKING_PIXEL_TO_M;
-    tag_track_private.meas.z = coord[2] * TAG_TRACKING_PIXEL_TO_M;
+    tag_track_private.meas.x = coord[0] * TAG_TRACKING_COORD_TO_M;
+    tag_track_private.meas.y = coord[1] * TAG_TRACKING_COORD_TO_M;
+    tag_track_private.meas.z = coord[2] * TAG_TRACKING_COORD_TO_M;
     struct FloatVect3 target_pos_ned;
     // compute ltp to cam rotation matrix
     struct FloatRMat *ltp_to_body_rmat = stateGetNedToBodyRMat_f();
@@ -190,6 +190,7 @@ static void tag_track_cb(uint8_t sender_id UNUSED,
 static void update_wp(void)
 {
 #ifdef TAG_TRACKING_WP
+  struct FloatVect3 target_pos_enu;
   ENU_OF_TO_NED(target_pos_enu, tag_tracking.pos); // convert local target pos to ENU
   struct EnuCoor_i pos_i;
   ENU_BFP_OF_REAL(pos_i, target_pos_enu);
