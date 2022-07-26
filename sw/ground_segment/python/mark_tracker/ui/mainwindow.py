@@ -102,13 +102,16 @@ class Ui_MainWindow(object):
         self.label_5.setSizePolicy(sizePolicy)
         self.label_5.setObjectName("label_5")
         self.verticalLayout_4.addWidget(self.label_5)
+
         self.pos_red = QtWidgets.QLabel(self.verticalLayoutWidget)
         self.pos_red.setAlignment(QtCore.Qt.AlignCenter)
         self.pos_red.setObjectName("pos_red")
         self.verticalLayout_4.addWidget(self.pos_red)
+
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_9.setSpacing(6)
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
+
         self.label_6 = QtWidgets.QLabel(self.verticalLayoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -116,16 +119,19 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
         self.label_6.setSizePolicy(sizePolicy)
         self.label_6.setObjectName("label_6")
+
         self.horizontalLayout_9.addWidget(self.label_6)
         self.nb_red = QtWidgets.QLabel(self.verticalLayoutWidget)
         self.nb_red.setAlignment(QtCore.Qt.AlignCenter)
         self.nb_red.setObjectName("nb_red")
+
         self.horizontalLayout_9.addWidget(self.nb_red)
         self.verticalLayout_4.addLayout(self.horizontalLayout_9)
         self.horizontalLayout_4.addLayout(self.verticalLayout_4)
         self.verticalLayout_5 = QtWidgets.QVBoxLayout()
         self.verticalLayout_5.setSpacing(6)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
+    
         self.clear_red = QtWidgets.QPushButton(self.verticalLayoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -133,6 +139,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.clear_red.sizePolicy().hasHeightForWidth())
         self.clear_red.setSizePolicy(sizePolicy)
         self.clear_red.setObjectName("clear_red")
+
         self.verticalLayout_5.addWidget(self.clear_red)
         self.combo_wp_red = QtWidgets.QComboBox(self.verticalLayoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
@@ -141,6 +148,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.combo_wp_red.sizePolicy().hasHeightForWidth())
         self.combo_wp_red.setSizePolicy(sizePolicy)
         self.combo_wp_red.setObjectName("combo_wp_red")
+
         self.verticalLayout_5.addWidget(self.combo_wp_red)
         self.send_red = QtWidgets.QPushButton(self.verticalLayoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
@@ -149,6 +157,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.send_red.sizePolicy().hasHeightForWidth())
         self.send_red.setSizePolicy(sizePolicy)
         self.send_red.setObjectName("send_red")
+
         self.verticalLayout_5.addWidget(self.send_red)
         self.horizontalLayout_4.addLayout(self.verticalLayout_5)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
@@ -157,6 +166,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setContentsMargins(-1, 3, -1, 3)
         self.horizontalLayout.setSpacing(6)
         self.horizontalLayout.setObjectName("horizontalLayout")
+
+
+
+
+
         self.label = QtWidgets.QLabel(self.verticalLayoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -541,6 +555,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MarkTracker"))
         self.label_19.setText(_translate("MainWindow", "Select UAV"))
         self.auto_send_check.setText(_translate("MainWindow", "auto send"))
+
         self.label_3.setText(_translate("MainWindow", "RED"))
         self.label_5.setText(_translate("MainWindow", "Position"))
         self.pos_red.setText(_translate("MainWindow", "lat / lon"))
@@ -548,6 +563,8 @@ class Ui_MainWindow(object):
         self.nb_red.setText(_translate("MainWindow", "0"))
         self.clear_red.setText(_translate("MainWindow", "Clear"))
         self.send_red.setText(_translate("MainWindow", "Send"))
+
+
         self.label.setText(_translate("MainWindow", "BLUE"))
         self.label_2.setText(_translate("MainWindow", "Position"))
         self.pos_blue.setText(_translate("MainWindow", "lat / lon"))
@@ -555,6 +572,8 @@ class Ui_MainWindow(object):
         self.nb_blue.setText(_translate("MainWindow", "0"))
         self.clear_blue.setText(_translate("MainWindow", "Clear"))
         self.send_blue.setText(_translate("MainWindow", "Send"))
+
+
         self.label_7.setText(_translate("MainWindow", "YELLOW"))
         self.label_8.setText(_translate("MainWindow", "Position"))
         self.pos_yellow.setText(_translate("MainWindow", "lat / lon"))
@@ -562,23 +581,31 @@ class Ui_MainWindow(object):
         self.nb_yellow.setText(_translate("MainWindow", "0"))
         self.clear_yellow.setText(_translate("MainWindow", "Clear"))
         self.send_yellow.setText(_translate("MainWindow", "Send"))
+
+
         self.label_13.setText(_translate("MainWindow", "ORANGE_1"))
         self.label_14.setText(_translate("MainWindow", "Position"))
         self.pos_orange_1.setText(_translate("MainWindow", "lat / lon"))
         self.label_15.setText(_translate("MainWindow", "NB"))
         self.nb_orange_1.setText(_translate("MainWindow", "0"))
         self.clear_orange_1.setText(_translate("MainWindow", "Clear"))
+
+
         self.label_16.setText(_translate("MainWindow", "ORANGE_2"))
         self.label_17.setText(_translate("MainWindow", "Position"))
         self.pos_orange_2.setText(_translate("MainWindow", "lat / lon"))
         self.label_18.setText(_translate("MainWindow", "NB"))
         self.nb_orange_2.setText(_translate("MainWindow", "0"))
         self.clear_orange_2.setText(_translate("MainWindow", "Clear"))
+
+
         self.label_23.setText(_translate("MainWindow", "ORANGE_3"))
         self.label_24.setText(_translate("MainWindow", "Position"))
         self.pos_orange_3.setText(_translate("MainWindow", "lat / lon"))
         self.label_25.setText(_translate("MainWindow", "NB"))
         self.nb_orange_3.setText(_translate("MainWindow", "0"))
         self.clear_orange_3.setText(_translate("MainWindow", "Clear"))
+
+
         self.label_10.setText(_translate("MainWindow", "Orange dist threshold"))
         self.threshold_label.setText(_translate("MainWindow", "5"))

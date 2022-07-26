@@ -92,7 +92,7 @@ class Tracker(Ui_MainWindow):
 
         ''' HMI callbacks '''
         self.combo_uav.currentIndexChanged.connect(self.uav_selected)
-        self.clear_red.clicked.connect(lambda:self.clear_mark(MARK_RED))
+        self.clear_red.clicked.connect(lambda:self.clear_mark(MARK_RED ))
         self.clear_blue.clicked.connect(lambda:self.clear_mark(MARK_BLUE))
         self.clear_yellow.clicked.connect(lambda:self.clear_mark(MARK_YELLOW))
         self.clear_orange_1.clicked.connect(lambda:self.clear_mark(MARK_ORANGE_1))

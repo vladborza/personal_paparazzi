@@ -13,4 +13,9 @@
     },
     "C_Cpp.dimInactiveRegions": false,
     "esbonio.sphinx.confDir": "",
+    "cmake.configureOnOpen": true,
+    "python.analysis.extraPaths": [
+        "./sw/ext/pprzlink/lib/v1.0/python",
+        "./sw/lib/python"
+    ],
 }
