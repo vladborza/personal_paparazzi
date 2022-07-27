@@ -1,3 +1,4 @@
+from cmath import sin
 from tkinter import Y
 from PyQt5 import QtCore, QtWidgets, QtGui
 from collections import namedtuple
@@ -5,7 +6,7 @@ from ui.mainwindow_tracker_new.form import Ui_MarkTracker
 import traceback
 from time import sleep
 import numpy as np
-from math import cos, sqrt, pi
+from math import atan2, cos, sqrt, pi
 
 import sys
 from os import path, getenv
@@ -37,6 +38,7 @@ mark_types = {
     MARK_S4: {'id':4, 'name':'Silent Deilivery'}
 }
 
+
 class Mark():
     '''
     Store mark information
@@ -66,6 +68,23 @@ class Mark():
     def __str__(self):
         out = 'Mark {} with ID {} at pos {}, {}'.format(self.name, self.id, self.lat, self.lon)
         return out
+    
+    def find_distance(self, lat, lon):
+        # R = 6371 * 1000
+        # phi1 = lat * pi / 180
+        # phi2 = self.lat * pi / 180
+        # delta_phi = (self.lat - lat) * pi / 180
+        # delta_l = (self.lon - lon) * pi / 180
+        # a = sin(delta_phi/2) * sin(delta_phi/2) + cos(phi1) * cos(phi2) * sin(delta_l/2) * sin(delta_l/2)
+        # c = 2 * atan2(sqrt(a),sqrt(1-a))
+        # dist = d = R * c
+
+        x = (lon - self.lon) * cos(pi * (lat + self.lat) / (2. * 180.))
+        y = lat - self.lat
+        z = sqrt(x*x + y*y) # "distance" in degree
+        dist = 1852 * 60 * z
+
+        return dist
 
 class Tracker(Ui_MarkTracker):
     '''
@@ -73,10 +92,15 @@ class Tracker(Ui_MarkTracker):
     '''  
     def __init__(self, parent=None, verbose=False):
         Ui_MarkTracker.__init__(self)
-        
+        self.mark2 = Mark(9, "9")
         self.verbose = verbose
         self.marks_fpl = {}
         self.marks_by_name = {}
+        self.known_pos = {
+            1: {'lat':40.132761, 'lon': -3.129471},
+            2: {'lat':40.143201, 'lon': -3.122423},
+            4: {'lat':40.124845, 'lon': -3.130921},
+        }
         
         for k, e in mark_types.items():
             self.marks_fpl[k] = Mark(k, e['name'])
@@ -137,8 +161,8 @@ class Tracker(Ui_MarkTracker):
                 self.commands.append(hist)
                 print('XML error',e.__str__())
             if self.verbose:
-                hist = str(conf)
-                self.commands.append(hist)
+                # hist = str(conf)
+                # self.commands.append(hist)
                 print(conf)
 
             self.active_uav.addItem(conf.name)
@@ -174,19 +198,18 @@ class Tracker(Ui_MarkTracker):
                     lat = float(msg['lat'])
                     lon = float(msg['long'])
 
-                    if(int(mark_id) == int(correct_id)):
-                        # print("WAYPOINT TO BE MOVED: ", self.uavs[conf2.name])
-                        # new_mark = Mark(mark_id,"S3")
-                        # new_mark.set_pos(lat,lon,self.alt_ref)
-                        # self.update_pos_label(new_mark)
-                        
-                        mark2_name = self.uavs[conf2.name][wps_counter]
-                        mark2 = Mark(mark_id,mark2_name)
-                        mark2.set_pos(lat, lon, self.alt_ref)
+                    mark = Mark(mark_id, str(ac_id) + "a/c")
+                    mark.set_pos(lat, lon, self.alt_ref)
+
+                    if(int(mark_id) == int(correct_id)):                        
+                        mark2_name = self.uavs[conf2.name][wps_counter-1]
+                        self.mark2 = Mark(mark_id,mark2_name)
+
+                        self.mark2.set_pos(lat, lon, self.alt_ref)
                         print(mark2_name, " ", lat, " ", lon)
-                        self.move_wp(ac_id, wps_counter,mark2)
-                        if self.combo_s3_wps.findText(str(mark2)):
-                            self.combo_s3_wps.addItem("Found " + str(mark2))
+                        self.move_wp(ac_id, wps_counter,self.mark2)
+                        if self.combo_s3_wps.findText(str(self.mark2)):
+                            self.combo_s3_wps.addItem("Found " + str(self.mark2))
                            
                         hist = "THIS IS THE CORRECT MARKER MOVED AS: " + str(mark2_name)
                         self.commands.append(hist)
@@ -196,19 +219,19 @@ class Tracker(Ui_MarkTracker):
                         # self.update_shape(self.marks_fpl[mark_id])
                         mark_update = Mark(wps_counter, mark2_name)
                         mark_update.set_pos(lat, lon, self.alt_ref)
-                        self.update_shape(mark_update)
+                        # self.update_shape(mark_update)
 
                         if self.checkBox_auto_send.checkState == True:
                             self.send_mark(mark_id)
                         wps_counter += 1 
-                        # populate active waypoints combo box
-                        # self.combo_s3_wps.addItem(mark_id)
+                    elif mark.find_distance(self.known_pos[1]['lat'], self.known_pos[1]['lon']) < 5:
+                        print("S1 found ", self.known_pos[1]['lat']," ",mark.find_distance(self.known_pos[1]['lat'], self.known_pos[1]['lon']))
                     else:
-                        mark2_name = self.uavs[conf2.name][wps_counter]
-                        mark2 = Mark(mark_id,mark2_name)
-                        mark2.set_pos(lat, lon, self.alt_ref)
+                        mark2_name = self.uavs[conf2.name][wps_counter-1]
+                        self.mark2 = Mark(mark_id,mark2_name)
+                        self.mark2.set_pos(lat, lon, self.alt_ref)
                         print(mark2_name, " ", lat, " ", lon)
-                        self.move_wp(ac_id, wps_counter,mark2)
+                        self.move_wp(ac_id, wps_counter,self.mark2)
                         
                         
                         hist = "This is a wrong marker moved as: " + str(mark2_name)
@@ -223,7 +246,7 @@ class Tracker(Ui_MarkTracker):
                             self.combo_s3_wps.addItem(str(new_mark))
                         mark_update = Mark(wps_counter, mark2_name)
                         mark_update.set_pos(lat, lon, self.alt_ref)
-                        self.update_shape(mark_update)
+                        # self.update_shape(mark_update)
                         # if mark_id not in self.marks_fpl.keys:
                         print(self.marks_fpl)
                         wps_counter += 1
@@ -452,6 +475,10 @@ class Tracker(Ui_MarkTracker):
         msg['text'] = 'NULL'
         self.connect.ivy.send(msg)
 
+
+    
+
+
     def find_closest_orange(self, lat, lon):
         ''' try to find the correct orange mark based on distances '''
         def dist_ll(mark):
@@ -468,7 +495,7 @@ class Tracker(Ui_MarkTracker):
         mark_id = None
         min_dist = float(self.orange_threshold.sliderPosition()) # max dist to consider same mark
         for i in mark_types.keys:
-            dist = dist_ll(self.marks_fpl[i]) #CHECK HERE!!!!
+            dist = dist_ll(self.marks_fpl[i])
             if dist is not None and dist < min_dist:
                 min_dist = dist # better solution
                 mark_id = i
