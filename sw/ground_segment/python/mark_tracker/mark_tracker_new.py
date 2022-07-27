@@ -92,7 +92,7 @@ class Tracker(Ui_MarkTracker):
 
     def built(self):
         global wps_counter
-        wps_counter = 0
+        wps_counter = 1
         for i in self.marks_fpl: 
             hist = str(i) + " " + str(self.marks_fpl[i])
             self.commands.append(hist)
@@ -179,26 +179,28 @@ class Tracker(Ui_MarkTracker):
                         # new_mark = Mark(mark_id,"S3")
                         # new_mark.set_pos(lat,lon,self.alt_ref)
                         # self.update_pos_label(new_mark)
-                        if self.combo_s3_wps.findText(str(Mark(mark_id,"Found "))):
-                            self.combo_s3_wps.addItem("Found " + str(Mark(mark_id,"")))
+                        
                         mark2_name = self.uavs[conf2.name][wps_counter]
                         mark2 = Mark(mark_id,mark2_name)
                         mark2.set_pos(lat, lon, self.alt_ref)
                         print(mark2_name, " ", lat, " ", lon)
                         self.move_wp(ac_id, wps_counter,mark2)
-
-                        wps_counter += 1    
+                        if self.combo_s3_wps.findText(str(mark2)):
+                            self.combo_s3_wps.addItem("Found " + str(mark2))
+                           
                         hist = "THIS IS THE CORRECT MARKER MOVED AS: " + str(mark2_name)
                         self.commands.append(hist)
                         #send ivy message with correct mark_id ???
                         self.connect.ivy.send(str(self.marks_fpl[MARK_S3]))
 
                         # self.update_shape(self.marks_fpl[mark_id])
-                        self.update_shape(mark2)
+                        mark_update = Mark(wps_counter, mark2_name)
+                        mark_update.set_pos(lat, lon, self.alt_ref)
+                        self.update_shape(mark_update)
 
                         if self.checkBox_auto_send.checkState == True:
                             self.send_mark(mark_id)
-
+                        wps_counter += 1 
                         # populate active waypoints combo box
                         # self.combo_s3_wps.addItem(mark_id)
                     else:
@@ -208,7 +210,7 @@ class Tracker(Ui_MarkTracker):
                         print(mark2_name, " ", lat, " ", lon)
                         self.move_wp(ac_id, wps_counter,mark2)
                         
-                        wps_counter += 1
+                        
                         hist = "This is a wrong marker moved as: " + str(mark2_name)
                         self.commands.append(hist)
                         # CHECK IF POS = ONE of the MARKER's positions (to know if it's mission 1 or 4)
@@ -219,10 +221,12 @@ class Tracker(Ui_MarkTracker):
                         new_mark.set_pos(lat,lon,self.alt_ref)
                         if self.combo_s3_wps.findText(str(new_mark)):
                             self.combo_s3_wps.addItem(str(new_mark))
-
-                        self.update_shape(mark2)
+                        mark_update = Mark(wps_counter, mark2_name)
+                        mark_update.set_pos(lat, lon, self.alt_ref)
+                        self.update_shape(mark_update)
                         # if mark_id not in self.marks_fpl.keys:
                         print(self.marks_fpl)
+                        wps_counter += 1
                         # self.combo_s3_wps.addItem(mark_id)
             else:
                 hist = "Marker found is not a marker type"
@@ -416,7 +420,7 @@ class Tracker(Ui_MarkTracker):
         msg['lat'] = mark.lat
         msg['long'] = mark.lon
         msg['alt'] = mark.alt
-        print("MOVING WP ", wp_id, " AC ID ", ac_id, " NAME ", mark.name)
+        print("MOVING WP ", wp_id, " AC ID ", ac_id, " NAME ", mark.name, " LAT ", mark.lat, " LON ", mark.lon)
         self.connect.ivy.send(msg)
 
     def update_shape(self, mark):
@@ -431,6 +435,7 @@ class Tracker(Ui_MarkTracker):
         msg['lonarr'] = [int(10**7 * mark.lon),0]
         msg['radius'] = 2.
         msg['text'] = mark.name
+        print("UPDATE SHAPE ", mark.id, " ", mark.lat, " ", mark.lon)
         self.connect.ivy.send(msg)
 
     def clear_shape(self, mark):
