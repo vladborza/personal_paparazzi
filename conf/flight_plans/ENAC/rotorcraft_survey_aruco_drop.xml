@@ -85,7 +85,7 @@
       <stay wp="TAG" until="(stage_time @GT 3 @AND tag_tracking.status == TAG_TRACKING_RUNNING) @OR (stage_time @GT 15)"/>
       <stay wp="TAG" climb="-0.5" vmode="climb" until="stateGetPositionEnu_f()->z @LT 0.5"/>
       <call_once fun="SwitchServoOff()"/>
-      <stay wp="TAG" until="stage_time @GT 3"/>
+      <stay wp="TAG" until="stage_time @GT 3" alt="WaypointAlt(WP_STDBY)"/>
       <deroute block="Standby"/>
     </block>
     <block name="Land Tag" strip_button="Land Tag" group="tag">

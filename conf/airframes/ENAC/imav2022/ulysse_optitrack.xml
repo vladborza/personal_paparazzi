@@ -286,8 +286,8 @@
   </section>
 
   <section name="TAG_TRACKING" prefix="TAG_TRACKING_">
-    <define name="BODY_TO_CAM_PSI" value="M_PI"/>
-    <define name="CAM_POS_Y" value="0.1"/>
+    <define name="BODY_TO_CAM_PSI" value="0"/>
+    <define name="CAM_POS_Y" value="-0.1"/>
   </section>
 
   <!--section name="TARGET_LOC" prefix="TARGET_LOC_">

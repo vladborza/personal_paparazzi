@@ -163,26 +163,33 @@ static void tag_track_cb(uint8_t sender_id UNUSED,
     tag_track_private.meas.x = coord[0] * TAG_TRACKING_COORD_TO_M;
     tag_track_private.meas.y = coord[1] * TAG_TRACKING_COORD_TO_M;
     tag_track_private.meas.z = coord[2] * TAG_TRACKING_COORD_TO_M;
-    struct FloatVect3 target_pos_ned;
-    // compute ltp to cam rotation matrix
+    struct FloatVect3 target_pos_ned, target_pos_body;
+    // compute target position in body frame (rotate and translate)
+    float_rmat_transp_vmult(&target_pos_body, &tag_track_private.body_to_cam, &tag_track_private.meas);
+    VECT3_ADD(target_pos_body, tag_track_private.cam_pos);
+    // rotate to ltp frame
     struct FloatRMat *ltp_to_body_rmat = stateGetNedToBodyRMat_f();
-    struct FloatRMat ltp_to_cam_rmat;
-    float_rmat_comp(&ltp_to_cam_rmat, ltp_to_body_rmat, &tag_track_private.body_to_cam);
-    float_rmat_transp_vmult(&target_pos_ned, &ltp_to_cam_rmat, &tag_track_private.meas);
+    float_rmat_transp_vmult(&target_pos_ned, ltp_to_body_rmat, &target_pos_body);
     // compute absolute position of tag in earth frame
     struct NedCoor_f * pos_ned = stateGetPositionNed_f();
     VECT3_ADD(target_pos_ned, *pos_ned);
-    // call correction step from here
-    simple_kinematic_kalman_update_pos(&kalman, target_pos_ned);
+    // update state and status
+    if (tag_tracking.status != TAG_TRACKING_RUNNING) {
+      // reset state after first detection or lost tag
+      struct FloatVect3 speed = { 0.f, 0.f, 0.f };
+      simple_kinematic_kalman_set_state(&kalman, target_pos_ned, speed);
+      tag_tracking.status = TAG_TRACKING_RUNNING;
+    }
+    else {
+      // RUNNING state, call correction step
+      simple_kinematic_kalman_update_pos(&kalman, target_pos_ned);
+    }
     // update public structure
     simple_kinematic_kalman_get_state(&kalman, &tag_tracking.pos, &tag_tracking.speed);
     // store tag ID
     tag_track_private.id = (uint8_t)jevois_extract_nb(id);
     // reset timeout and status
     tag_track_private.timeout = 0.f;
-    if (tag_tracking.status != TAG_TRACKING_RUNNING) {
-      tag_tracking.status = TAG_TRACKING_RUNNING;
-    }
   }
 }
 
@@ -245,7 +252,7 @@ void tag_tracking_propagate()
       // force speed to zero for fixed tag
       if (tag_tracking.motion_type == TAG_TRACKING_FIXED_POS) {
         struct FloatVect3 zero = { 0.f, 0.f, 0.f };
-        simple_kinematic_kalman_update_speed(&kalman, zero, 3);
+        simple_kinematic_kalman_update_speed(&kalman, zero, SIMPLE_KINEMATIC_KALMAN_SPEED_3D);
       }
       // update public structure
       simple_kinematic_kalman_get_state(&kalman, &tag_tracking.pos, &tag_tracking.speed);
@@ -258,25 +265,18 @@ void tag_tracking_propagate()
       }
       break;
     case TAG_TRACKING_LOST:
-      // stop propagation, wait for a new detection
+      // tag is lost, restart filter and wait for a new detection
+      tag_tracking_propagate_start();
       break;
     default:
       break;
   }
 }
 
-// Propagation start function (called at each start state
+// Propagation start function (called at each start state)
 void tag_tracking_propagate_start()
 {
-  // your periodic start code here.
-  struct FloatVect3 speed, measures;
-  struct FloatRMat *ltp_to_body_rmat = stateGetNedToBodyRMat_f();
-  struct FloatRMat ltp_to_cam_rmat;
-  float_rmat_comp(&ltp_to_cam_rmat, ltp_to_body_rmat, &tag_track_private.body_to_cam);
-  float_rmat_transp_vmult(&measures, &ltp_to_cam_rmat, &tag_track_private.meas);
-  float_rmat_transp_vmult(&speed, &ltp_to_cam_rmat, &tag_tracking.speed);
   simple_kinematic_kalman_init(&kalman, TAG_TRACKING_P0_POS, TAG_TRACKING_P0_SPEED, TAG_TRACKING_Q_SIGMA2, TAG_TRACKING_R, tag_track_dt);
-  simple_kinematic_kalman_set_state(&kalman, measures, speed);
   tag_tracking.status = TAG_TRACKING_SEARCHING;
   tag_track_private.timeout = 0.f;
 }

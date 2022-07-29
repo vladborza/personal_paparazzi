@@ -33,6 +33,11 @@
 
 #define SIMPLE_KINEMATIC_KALMAN_DIM 6
 
+// Speed update types
+#define SIMPLE_KINEMATIC_KALMAN_SPEED_HORIZONTAL  1
+#define SIMPLE_KINEMATIC_KALMAN_SPEED_VERTICAL    2
+#define SIMPLE_KINEMATIC_KALMAN_SPEED_3D          3
+
 /** Kalman structure
  *
  * state vector: X = [ x xd y yd z zd ]'
