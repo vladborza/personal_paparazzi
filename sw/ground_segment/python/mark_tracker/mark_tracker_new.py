@@ -21,6 +21,10 @@ sys.path.append(PPRZ_HOME + "/var/lib/python") # pprzlink
 
 from pprzlink.message import PprzMessage
 from pprz_connect import PprzConnect, PprzConfig
+from flight_plan import FlightPlan
+from flight_plan import Waypoint
+
+
 
 import lxml.etree as ET
 
@@ -97,9 +101,10 @@ class Tracker(Ui_MarkTracker):
         self.marks_fpl = {}
         self.marks_by_name = {}
         self.known_pos = {
-            1: {'lat':40.132761, 'lon': -3.129471},
-            2: {'lat':40.143201, 'lon': -3.122423},
-            4: {'lat':40.124845, 'lon': -3.130921},
+            1: {'lat':52.171387, 'lon': 4.420618},
+            2: {'lat': 52.169916, 'lon': 4.415763},
+            4: {'lat': 52.170707, 'lon': 4.418157},
+            5: {'lat': 0, 'lon': 0},
         }
         
         for k, e in mark_types.items():
@@ -112,11 +117,10 @@ class Tracker(Ui_MarkTracker):
         #print(mark_types)
         #print(self.marks)
         self.uavs = {}
+        self.uav_id = {}
         self.alt_ref = 0
 
     def built(self):
-        global wps_counter
-        wps_counter = 1
         for i in self.marks_fpl: 
             hist = str(i) + " " + str(self.marks_fpl[i])
             self.commands.append(hist)
@@ -134,42 +138,41 @@ class Tracker(Ui_MarkTracker):
         self.send_s4.clicked.connect(lambda:self.send_mark(MARK_S4))
         
         ''' get aircraft config '''
-        #POPULATE COMBO LIST WITH flight plan waypoints
-        #USE THIS TO POPULATE LIST the same way for each mission
+        #get current flight plan with its waypoints and UAV info
         def connect_cb(conf):
             global conf2 
+            global wps
             conf2 = conf
-
             active_wps = []
-            try: 
-                xml = ET.parse(conf.flight_plan)
-                fp = xml.find('flight_plan')
-                hist = str(fp.find('waypoints')) + "\n"
-                self.commands.append(hist)
-                print(fp.find('waypoints'))
 
-                self.alt_ref = fp.get("alt")
-                wps = fp.find('waypoints')
+            try: 
+                fpl = FlightPlan().parse(conf.flight_plan)
+                wps = fpl.waypoints              
+                for wp in wps:
+                    print(wp.name, " ", wp.alt, " ", wp.no)
+                hist = str(wps) + "\n"
+                self.commands.append(hist)
+                self.alt_ref = fpl.alt
                 if wps is not None:
                     self.uavs[conf.name] = []
-                    for wp in wps.iter("waypoint"):
-                        self.uavs[conf.name].append(wp.get("name"))
-                        active_wps.append(wp.get("name"))
-                        #print(wp.get("name"))
+                    for wp in wps:
+                        self.uavs[conf.name].append(wp.name)
+                        active_wps.append(wp.name)
+                self.uav_id[str(conf.name)] = {'id': conf.id}
+
             except (IOError, ET.XMLSyntaxError) as e:
-                hist = 'XML error' + e.__str__()
+                hist = 'FlightPlan error' + e.__str__()
                 self.commands.append(hist)
-                print('XML error',e.__str__())
+                print('FlightPlan error',e.__str__())
+
             if self.verbose:
-                # hist = str(conf)
-                # self.commands.append(hist)
                 print(conf)
 
             self.active_uav.addItem(conf.name)
 
             hist = str(self.uavs[conf.name])
             self.commands.append(hist)
-            print(self.uavs[conf.name], " ################################### ")
+            print(self.uavs[conf.name]," ################################### ")
 
         ''' create connect object, it will start Ivy interface '''
         self.connect = PprzConnect(notify=connect_cb)
@@ -181,7 +184,8 @@ class Tracker(Ui_MarkTracker):
         ''' bind to MARK message '''
         def mark_cb(ac_id, msg):
             global conf2
-            global correct_id, wps_counter
+            global correct_id
+            global wps
             mark_id = int(msg['ac_id']) # abuse ac_id field
             if(mark_id is not None):
                 if(mark_id not in self.id_list):
@@ -193,64 +197,93 @@ class Tracker(Ui_MarkTracker):
                         hist = 'From ' + str(ac_id) + ': ' + str(msg)
                         self.commands.append(hist)
                         print('from ',ac_id,':',msg)
-                    # update mark and send shape
-                    print(mark_id, "bind")
+
                     lat = float(msg['lat'])
                     lon = float(msg['long'])
-
+                    
                     mark = Mark(mark_id, str(ac_id) + "a/c")
                     mark.set_pos(lat, lon, self.alt_ref)
 
-                    if(int(mark_id) == int(correct_id)):                        
-                        mark2_name = self.uavs[conf2.name][wps_counter-1]
-                        self.mark2 = Mark(mark_id,mark2_name)
+                    #find id for the selected UAV
+                    for i, j in self.uav_id.items():
+                        if(i == self.active_uav.currentText()):
+                            print("UAV ID is: ", j['id'])
+                            id = j['id']
 
+                    #find id for the selected waypoint to be moved
+                    print("WAYPOINTS")
+                    for i in wps:
+                        if(str(self.combo_s3.currentText()) == str(i.name)):
+                            no = i.no
+                            print("CORRECT ", i.name, ": ", i.no)
+
+                    if(int(mark_id) == int(correct_id)):
+                        #MISSION 3                        
+                        print("DICT HERE: ", self.uav_id)                      
+                        #create new marker with the name, id, pos
+                        mark2_name = self.uavs[conf2.name][no]
+                        self.mark2 = Mark(mark_id,mark2_name)  
                         self.mark2.set_pos(lat, lon, self.alt_ref)
                         print(mark2_name, " ", lat, " ", lon)
-                        self.move_wp(ac_id, wps_counter,self.mark2)
+                        
+                        #move the selected waypoint on the GCS
+                        self.move_wp(id, no, self.mark2)
+
+                        # add correct marker to list
                         if self.combo_s3_wps.findText(str(self.mark2)):
                             self.combo_s3_wps.addItem("Found " + str(self.mark2))
-                           
-                        hist = "THIS IS THE CORRECT MARKER MOVED AS: " + str(mark2_name)
+                        
+                        hist = "This is the correct marker moved as: " + str(mark2_name)
                         self.commands.append(hist)
-                        #send ivy message with correct mark_id ???
+
                         self.connect.ivy.send(str(self.marks_fpl[MARK_S3]))
-
-                        # self.update_shape(self.marks_fpl[mark_id])
-                        mark_update = Mark(wps_counter, mark2_name)
-                        mark_update.set_pos(lat, lon, self.alt_ref)
-                        # self.update_shape(mark_update)
-
+                        
+                        # update shape position to corresponds its marker
+                        mark_update = Mark(no, "S3")
                         if self.checkBox_auto_send.checkState == True:
-                            self.send_mark(mark_id)
-                        wps_counter += 1 
+                            self.send_mark(no)
+                         
+                    
                     elif mark.find_distance(self.known_pos[1]['lat'], self.known_pos[1]['lon']) < 5:
-                        print("S1 found ", self.known_pos[1]['lat']," ",mark.find_distance(self.known_pos[1]['lat'], self.known_pos[1]['lon']))
+                        #MISSION 1
+                        mark_update = Mark(no, "S1")
+                        print("S1 found ", self.known_pos[1]['lat']," ", self.known_pos[1]['lon'])
+                    
+                    elif mark.find_distance(self.known_pos[4]['lat'], self.known_pos[4]['lon']) < 5:
+                        #MISSION 4
+                        mark_update = Mark(no, "S4")
+                        print("S4 found ", self.known_pos[4]['lat']," ", self.known_pos[1]['lon'])
+                    
+                    elif mark.find_distance(self.known_pos[2]['lat'], self.known_pos[2]['lon']) < 100:
+                        #MISSION 2
+                        mark_update = Mark(no, "S2")
+                        print("S2 found ", self.known_pos[2]['lat']," ",self.known_pos[1]['lon'])
+                    
                     else:
-                        mark2_name = self.uavs[conf2.name][wps_counter-1]
+                        #IF THERE IS A RANDOMLY DETECTED MARKER ON GROUND
+                        mark2_name = self.uavs[conf2.name][no]
                         self.mark2 = Mark(mark_id,mark2_name)
                         self.mark2.set_pos(lat, lon, self.alt_ref)
                         print(mark2_name, " ", lat, " ", lon)
-                        self.move_wp(ac_id, wps_counter,self.mark2)
-                        
+                        self.move_wp(id, no, self.mark2)  
                         
                         hist = "This is a wrong marker moved as: " + str(mark2_name)
                         self.commands.append(hist)
-                        # CHECK IF POS = ONE of the MARKER's positions (to know if it's mission 1 or 4)
-                        # else - check if pos is around 100m of a certain position defined to know if it's mission 2
-                        #populate active waypoints combo box
-                        # print("POTENTIAL WAYPOINT: ", self.uavs[conf2.name])
+
                         new_mark = Mark(mark_id,"")
                         new_mark.set_pos(lat,lon,self.alt_ref)
+
                         if self.combo_s3_wps.findText(str(new_mark)):
                             self.combo_s3_wps.addItem(str(new_mark))
-                        mark_update = Mark(wps_counter, mark2_name)
-                        mark_update.set_pos(lat, lon, self.alt_ref)
-                        # self.update_shape(mark_update)
-                        # if mark_id not in self.marks_fpl.keys:
+
+                        mark_update = Mark(no, "")
                         print(self.marks_fpl)
-                        wps_counter += 1
-                        # self.combo_s3_wps.addItem(mark_id)
+                        
+                    
+                    mark_update.set_pos(lat, lon, self.alt_ref)
+                    self.update_shape(mark_update)
+                    self.update_pos_label(mark_update)
+
             else:
                 hist = "Marker found is not a marker type"
                 self.commands.append(hist)
@@ -335,7 +368,8 @@ class Tracker(Ui_MarkTracker):
         hist = "Label update" + "\n"
         self.commands.append(hist)
         if(mark.id is not None):
-            if(mark.name == "S3"):
+            if(mark.name == "S3" or mark.name == ""):
+                self.marks_fpl[mark.id].set_pos(mark.lat, mark.lon, self.alt_ref)
                 self.pos_s3.setText("{:.7f} / {:.7f}".format(mark.lat, mark.lon))
             elif(mark.name == "S1"):
                 self.pos_s1.setText("{:.7f} / {:.7f}".format(mark.lat, mark.lon))
@@ -392,13 +426,20 @@ class Tracker(Ui_MarkTracker):
                 return None
 
     def send_mark(self, mark_id):
-        global correct_id
+        global correct_id, wps
         ''' send mark to selected uab cb '''
         hist = "Send mark - " + str(mark_id)
         self.commands.append(hist)
         print("Send_mark - ",mark_id)
 
+
+        #CHANGE MARK TYPE - LOC
         mark = self.marks_fpl[mark_id]
+        pos = self.pos_s3.text().split("/")
+        lat = float(pos[0])
+        lon = float(pos[1])
+        mark.set_pos(lat,lon,self.alt_ref)
+
         uav_name = self.active_uav.currentText()
         wp_id = self.get_wp_id(mark_id)
         if uav_name != '':
