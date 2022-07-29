@@ -267,12 +267,12 @@ void simple_kinematic_kalman_update_speed(struct SimpleKinematicKalman *kalman, 
 {
   // measurement vector
   float Z[3] = { speed.x, speed.y, speed.z };
-  if (type == 1) {
+  if (type == SIMPLE_KINEMATIC_KALMAN_SPEED_HORIZONTAL) {
     // update horizontal speed
     kalman->Hs[0][1] = 1.f;
     kalman->Hs[1][3] = 1.f;
     kalman->Hs[2][5] = 0.f;
-  } else if (type == 2) {
+  } else if (type == SIMPLE_KINEMATIC_KALMAN_SPEED_VERTICAL) {
     // update vertical speed
     kalman->Hs[0][1] = 0.f;
     kalman->Hs[1][3] = 0.f;
