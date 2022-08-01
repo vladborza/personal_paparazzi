@@ -222,7 +222,7 @@ class Tracker(Ui_MarkTracker):
                         #MISSION 3                        
                         print("DICT HERE: ", self.uav_id)                      
                         #create new marker with the name, id, pos
-                        mark2_name = self.uavs[conf2.name][no]
+                        mark2_name = self.uavs[conf2.name][no-1]
                         self.mark2 = Mark(mark_id,mark2_name)  
                         self.mark2.set_pos(lat, lon, self.alt_ref)
                         print(mark2_name, " ", lat, " ", lon)
@@ -238,11 +238,10 @@ class Tracker(Ui_MarkTracker):
                         
                         # update shape position to corresponds its marker
                         mark_update = Mark(no, "S3")
+                        mark_update.set_pos(lat, lon, self.alt_ref)
+                        self.update_shape(mark_id, mark_update)
                         if self.checkBox_auto_send.isChecked():
                             print("SENDING MARKER NOW S3")
-                            
-                            mark_update.set_pos(lat, lon, self.alt_ref)
-                            self.update_shape(mark_id, mark_update)
                             # UPDATE POS LABEL BEFORE SENDING MARKER
                             self.send_mark(MARK_S3)
                             # move the selected waypoint on the GCS
@@ -269,12 +268,12 @@ class Tracker(Ui_MarkTracker):
                         mark2_name = self.uavs[conf2.name][no]
                         self.mark2 = Mark(mark_id, mark2_name)
                         self.mark2.set_pos(lat, lon, self.alt_ref)
+                        mark_update.set_pos(lat, lon, self.alt_ref)
+                        self.update_shape(mark_id, mark_update)
                         print(mark2_name, " ", lat, " ", lon)
 
                         if self.checkBox_auto_send.isChecked():
                             print("SENDING MARKER NOW S2")
-                            mark_update.set_pos(lat, lon, self.alt_ref)
-                            self.update_shape(mark_id, mark_update)
                             self.send_mark(MARK_S2)
                             #self.move_wp(id, no, self.mark2)
                         
@@ -406,14 +405,27 @@ class Tracker(Ui_MarkTracker):
 
     def clear_pos_label(self, mark):
         if(mark.id is not None):
-            if(mark.name == "S1"):
-                self.pos_s1.setText("lat / lon")                
-            if(mark.name == "S2"):
-                self.pos_s2.setText("lat / lon")    
-            if(mark.name == "S3"):
-                self.pos_s3.setText("lat / lon")    
-            if(mark.name == "S4"):
-                self.pos_s4.setText("lat / lon")           
+            if(mark.id == MARK_S1):
+                self.pos_s1.setText("lat / lon")
+                id = int(self.id_s1.text())
+                self.id_list.remove(id) 
+                self.id_s1.setText(" - ")  
+                print(self.id_list)             
+            if(mark.id == MARK_S2):
+                self.pos_s2.setText("lat / lon")  
+                id = int(self.id_s2.text())
+                self.id_list.remove(id) 
+                self.id_s2.setText(" - ")  
+                print(self.id_list)            
+            if(mark.id == MARK_S3):
+                self.pos_s3.setText("lat / lon")   
+                print(self.id_list)        
+            if(mark.id == MARK_S4):
+                self.pos_s4.setText("lat / lon")  
+                id = int(self.id_s4.text())
+                self.id_list.remove(id) 
+                self.id_s4.setText(" - ")   
+                print(self.id_list)                  
         else:
             hist = "Mark id error"
             self.commands.append(hist)

@@ -2,7 +2,7 @@ make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/vladborza/paparazzi'
  
 echo "------------------------------------------------------------"
-echo "Building Paparazzi version" v6.2_unstable-79-ge3ac24c0e-dirty
+echo "Building Paparazzi version" v6.2_unstable-88-gf60bbc4db-dirty
 echo "------------------------------------------------------------"
 [ -L conf/conf.xml ] || [ -f conf/conf.xml ] || cp conf/conf_example.xml conf/conf.xml
 [ -L conf/control_panel.xml ] || [ -f conf/control_panel.xml ] || cp conf/control_panel_example.xml conf/control_panel.xml
@@ -25,7 +25,6 @@ make[2]: Leaving directory '/home/vladborza/paparazzi/sw/ext/pprzlink/lib/v2.0/o
 make[2]: Entering directory '/home/vladborza/paparazzi/sw/ext/pprzlink/lib/v2.0/python'
 # Install correct version python library to DESTDIR
 INSTALL at location /home/vladborza/paparazzi/var/lib/python
- 
 make[2]: Leaving directory '/home/vladborza/paparazzi/sw/ext/pprzlink/lib/v2.0/python'
 make[1]: Leaving directory '/home/vladborza/paparazzi/sw/ext/pprzlink'
 test -d /home/vladborza/paparazzi/var || mkdir -p /home/vladborza/paparazzi/var
@@ -33,7 +32,6 @@ test -d /home/vladborza/paparazzi/var || mkdir -p /home/vladborza/paparazzi/var
 make -C sw/lib/ocaml
 OCY expr_parser.mly
 OCL expr_lexer.mll
- 
 59 states, 504 transitions, table size 2370 bytes
 DEPEND .depend
  
@@ -49,7 +47,6 @@ echo OC base64.mli
 ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,netclient,nettls-gnutls,glibivy,lablgtk2,pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade base64.mli
 echo OC base64.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,netclient,nettls-gnutls,glibivy,lablgtk2 -c base64.ml
- 
 echo OC serial.mli
 ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,netclient,nettls-gnutls,glibivy,lablgtk2,pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade serial.mli
 echo OC serial.ml
@@ -106,7 +103,6 @@ echo OC iGN.mli
 ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,netclient,nettls-gnutls,glibivy,lablgtk2,pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade iGN.mli
 echo OC iGN.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,netclient,nettls-gnutls,glibivy,lablgtk2 -c iGN.ml
- 
 echo OC geometry_2d.mli
 ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,netclient,nettls-gnutls,glibivy,lablgtk2,pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade geometry_2d.mli
 echo OC geometry_2d.ml
@@ -125,7 +121,6 @@ echo OC os_calls.mli
 ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,netclient,nettls-gnutls,glibivy,lablgtk2,pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade os_calls.mli
 echo OC os_calls.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,netclient,nettls-gnutls,glibivy,lablgtk2 -c os_calls.ml
- 
 echo OC editAirframe.mli
 ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,netclient,nettls-gnutls,glibivy,lablgtk2,pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade editAirframe.mli
 echo OC editAirframe.ml
@@ -258,28 +253,28 @@ ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,glibivy,lablgtk2-
 echo OC wind_sock.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c wind_sock.ml
 echo GLADE gtk_papget_editor.ml
-grep -v invisible_char widgets.glade > /tmp/tmp.ixUBNtJqHj
-lablgladecc2 -root papget_editor -hide-default /tmp/tmp.ixUBNtJqHj | grep -B 1000000 "  end" > gtk_papget_editor.ml
-rm -f /tmp/tmp.ixUBNtJqHj
+grep -v invisible_char widgets.glade > /tmp/tmp.KFVs5qxGOr
+lablgladecc2 -root papget_editor -hide-default /tmp/tmp.KFVs5qxGOr | grep -B 1000000 "  end" > gtk_papget_editor.ml
+rm -f /tmp/tmp.KFVs5qxGOr
  
 echo OC gtk_papget_editor.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c gtk_papget_editor.ml
 echo GLADE gtk_papget_text_editor.ml
-grep -v invisible_char widgets.glade > /tmp/tmp.VMF9ZyclJ6
-lablgladecc2 -root table_text_editor -hide-default /tmp/tmp.VMF9ZyclJ6 | grep -B 1000000 "  end" > gtk_papget_text_editor.ml
-rm -f /tmp/tmp.VMF9ZyclJ6
+grep -v invisible_char widgets.glade > /tmp/tmp.GKwg9wZgLs
+lablgladecc2 -root table_text_editor -hide-default /tmp/tmp.GKwg9wZgLs | grep -B 1000000 "  end" > gtk_papget_text_editor.ml
+rm -f /tmp/tmp.GKwg9wZgLs
 echo OC gtk_papget_text_editor.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c gtk_papget_text_editor.ml
 echo GLADE gtk_papget_gauge_editor.ml
-grep -v invisible_char widgets.glade > /tmp/tmp.CnSQsZBaMt
-lablgladecc2 -root table_gauge_editor -hide-default /tmp/tmp.CnSQsZBaMt | grep -B 1000000 "  end" > gtk_papget_gauge_editor.ml
-rm -f /tmp/tmp.CnSQsZBaMt
+grep -v invisible_char widgets.glade > /tmp/tmp.UU1AEP3Kn0
+lablgladecc2 -root table_gauge_editor -hide-default /tmp/tmp.UU1AEP3Kn0 | grep -B 1000000 "  end" > gtk_papget_gauge_editor.ml
+rm -f /tmp/tmp.UU1AEP3Kn0
 echo OC gtk_papget_gauge_editor.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c gtk_papget_gauge_editor.ml
 echo GLADE gtk_papget_led_editor.ml
-grep -v invisible_char widgets.glade > /tmp/tmp.rFUx92c7l3
-lablgladecc2 -root table_led_editor -hide-default /tmp/tmp.rFUx92c7l3 | grep -B 1000000 "  end" > gtk_papget_led_editor.ml
-rm -f /tmp/tmp.rFUx92c7l3
+grep -v invisible_char widgets.glade > /tmp/tmp.IA97DhPyGw
+lablgladecc2 -root table_led_editor -hide-default /tmp/tmp.IA97DhPyGw | grep -B 1000000 "  end" > gtk_papget_led_editor.ml
+rm -f /tmp/tmp.IA97DhPyGw
 echo OC gtk_papget_led_editor.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c gtk_papget_led_editor.ml
 echo OC papget_common.mli
@@ -294,6 +289,7 @@ echo OC papget.mli
 ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade,pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade papget.mli
 echo OC papget.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c papget.ml
+ 
 echo OC mapCanvas.mli
 ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade,pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade mapCanvas.mli
 echo OC mapCanvas.ml
@@ -302,19 +298,20 @@ echo OC mapWaypoints.mli
 ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade,pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade mapWaypoints.mli
 echo OC mapWaypoints.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c mapWaypoints.ml
+ 
 echo OC mapTrack.mli
 ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade,pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade mapTrack.mli
 echo OC mapTrack.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c mapTrack.ml
 echo OC mapGoogle.mli
 ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade,pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade mapGoogle.mli
- 
 echo OC mapGoogle.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c mapGoogle.ml
 echo OC mapIGN.mli
 ocamlfind ocamlc -safe-string -g   -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade,pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade mapIGN.mli
 echo OC mapIGN.ml
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c mapIGN.ml
+ 
 echo OC ml_gtk_drag.c
 ocamlfind ocamlc -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c -ccopt "-pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/pango-1.0 -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16 -DGTK_DISABLE_DEPRECATED" ml_gtk_drag.c
 echo OC xmlEdit.mli
@@ -335,13 +332,13 @@ echo OOC contrastLabel.ml
 ocamlfind ocamlopt -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c contrastLabel.ml
 echo OOC acIcon.ml
 ocamlfind ocamlopt -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c acIcon.ml
- 
 echo OOC wind_sock.ml
 ocamlfind ocamlopt -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c wind_sock.ml
 echo OOC gtk_papget_editor.ml
 ocamlfind ocamlopt -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c gtk_papget_editor.ml
 echo OOC gtk_papget_text_editor.ml
 ocamlfind ocamlopt -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c gtk_papget_text_editor.ml
+ 
 echo OOC gtk_papget_gauge_editor.ml
 ocamlfind ocamlopt -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c gtk_papget_gauge_editor.ml
 echo OOC gtk_papget_led_editor.ml
@@ -350,6 +347,7 @@ echo OOC papget_common.ml
 ocamlfind ocamlopt -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c papget_common.ml
 echo OOC papget_renderer.ml
 ocamlfind ocamlopt -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c papget_renderer.ml
+ 
 echo OOC papget.ml
 ocamlfind ocamlopt -safe-string -g  -package pprzlink,xml-light,glibivy,lablgtk2-gnome.gnomecanvas,lablgtk2.glade -c papget.ml
 echo OOC mapCanvas.ml
@@ -380,18 +378,18 @@ ocamlmklib   -o lib-pprz fig.cmx debug.cmx base64.cmx serial.cmx ocaml_tools.cmx
 echo OOL xlib-pprz.cmxa
 ocamlmklib   -o xlib-pprz gtk_tools.cmx platform.cmx contrastLabel.cmx acIcon.cmx wind_sock.cmx gtk_papget_editor.cmx gtk_papget_text_editor.cmx gtk_papget_gauge_editor.cmx gtk_papget_led_editor.cmx papget_common.cmx papget_renderer.cmx papget.cmx mapCanvas.cmx mapWaypoints.cmx mapTrack.cmx mapGoogle.cmx mapIGN.cmx ml_gtk_drag.o xmlEdit.cmx mapFP.cmx
 make -C sw/supervision
- 
 DEPEND .depend
+ 
 echo GLADE gtk_pc.ml
-grep -v invisible_char paparazzicenter.glade > /tmp/tmp.I2LrYSKQSI
-lablgladecc2 -hide-default -root window /tmp/tmp.I2LrYSKQSI > gtk_pc.ml
-rm -f /tmp/tmp.I2LrYSKQSI
+grep -v invisible_char paparazzicenter.glade > /tmp/tmp.lqB6rQexVK
+lablgladecc2 -hide-default -root window /tmp/tmp.lqB6rQexVK > gtk_pc.ml
+rm -f /tmp/tmp.lqB6rQexVK
 echo OC gtk_pc.ml
 ocamlfind ocamlc -safe-string -g  -c -package pprz.xlib, gtk_pc.ml
 echo GLADE gtk_process.ml
-grep -v invisible_char paparazzicenter.glade > /tmp/tmp.krICTusCVv
-lablgladecc2 -hide-default -root hbox_program /tmp/tmp.krICTusCVv | grep -B 1000000 "  end" > gtk_process.ml
-rm -f /tmp/tmp.krICTusCVv
+grep -v invisible_char paparazzicenter.glade > /tmp/tmp.LBBkrkeFIx
+lablgladecc2 -hide-default -root hbox_program /tmp/tmp.LBBkrkeFIx | grep -B 1000000 "  end" > gtk_process.ml
+rm -f /tmp/tmp.LBBkrkeFIx
 echo OC gtk_process.ml
 ocamlfind ocamlc -safe-string -g  -c -package pprz.xlib, gtk_process.ml
 echo OC /home/vladborza/paparazzi/sw/lib/ocaml/extXml.mli
@@ -400,11 +398,11 @@ echo OC /home/vladborza/paparazzi/sw/lib/ocaml/env.mli
 ocamlfind ocamlc -safe-string -g  -c -package pprz.xlib, /home/vladborza/paparazzi/sw/lib/ocaml/env.mli
 echo OC pc_common.ml
 ocamlfind ocamlc -safe-string -g  -c -package pprz.xlib, pc_common.ml
+ 
 echo OC /home/vladborza/paparazzi/sw/lib/ocaml/gtk_tools.mli
 ocamlfind ocamlc -safe-string -g  -c -package pprz.xlib, /home/vladborza/paparazzi/sw/lib/ocaml/gtk_tools.mli
 echo OC pc_control_panel.ml
 ocamlfind ocamlc -safe-string -g  -c -package pprz.xlib, pc_control_panel.ml
- 
 echo OC /home/vladborza/paparazzi/sw/lib/ocaml/os_calls.mli
 ocamlfind ocamlc -safe-string -g  -c -package pprz.xlib, /home/vladborza/paparazzi/sw/lib/ocaml/os_calls.mli
 echo OC /home/vladborza/paparazzi/sw/lib/ocaml/module.ml
@@ -415,6 +413,7 @@ echo OC pc_aircraft.ml
 ocamlfind ocamlc -safe-string -g  -c -package pprz.xlib, pc_aircraft.ml
 echo OC paparazzicenter.ml
 ocamlfind ocamlc -safe-string -g  -c -package pprz.xlib, paparazzicenter.ml
+ 
 echo OL paparazzicenter
 ocamlfind ocamlc -safe-string -g  -o paparazzicenter -package pprz.xlib, -linkpkg -dllpath-pkg pprz.xlib,pprzlink gtkInit.cmo gtk_pc.cmo gtk_process.cmo pc_common.cmo pc_control_panel.cmo pc_aircraft.cmo paparazzicenter.cmo /home/vladborza/paparazzi/sw/lib/ocaml/lib-pprz.cma /home/vladborza/paparazzi/var/lib/ocaml/pprzlink/lib-pprzlink.cma /home/vladborza/paparazzi/sw/lib/ocaml/xlib-pprz.cma
 make -C sw/logalizer
@@ -447,9 +446,9 @@ ocamlfind ocamlc -safe-string -g   -c -package glibivy,pprz plotter.ml
 echo OL plotter
 ocamlfind ocamlc -safe-string -g  -o plotter -package pprz.xlib -linkpkg -dllpath-pkg pprz.xlib,pprzlink gtkInit.cmo plotter.cmo /home/vladborza/paparazzi/sw/lib/ocaml/lib-pprz.cma /home/vladborza/paparazzi/var/lib/ocaml/pprzlink/lib-pprzlink.cma /home/vladborza/paparazzi/sw/lib/ocaml/xlib-pprz.cma
 echo GLADE gtk_export.ml
-grep -v invisible_char export.glade > /tmp/tmp.YKZtVWYNVj
-lablgladecc2 -root export -hide-default /tmp/tmp.YKZtVWYNVj | grep -B 1000000 "  end" > gtk_export.ml
-rm -f /tmp/tmp.YKZtVWYNVj
+grep -v invisible_char export.glade > /tmp/tmp.A3DtAMQzTC
+lablgladecc2 -root export -hide-default /tmp/tmp.A3DtAMQzTC | grep -B 1000000 "  end" > gtk_export.ml
+rm -f /tmp/tmp.A3DtAMQzTC
 echo OC gtk_export.ml
 ocamlfind ocamlc -safe-string -g   -c -package glibivy,pprz gtk_export.ml
 echo OCI /home/vladborza/paparazzi/sw/lib/ocaml/latlong.mli
@@ -464,6 +463,7 @@ echo OC logplotter.ml
 ocamlfind ocamlc -safe-string -g   -c -package glibivy,pprz logplotter.ml
 echo OL logplotter
 ocamlfind ocamlc -safe-string -g  -o logplotter -package pprz.xlib -linkpkg -dllpath-pkg pprz.xlib,pprzlink gtkInit.cmo log_file.cmo gtk_export.cmo export.cmo logplotter.cmo /home/vladborza/paparazzi/sw/lib/ocaml/lib-pprz.cma /home/vladborza/paparazzi/var/lib/ocaml/pprzlink/lib-pprzlink.cma /home/vladborza/paparazzi/sw/lib/ocaml/xlib-pprz.cma
+ 
 echo OC /home/vladborza/paparazzi/sw/lib/ocaml/aircraft.ml
 ocamlfind ocamlc -safe-string -g   -c -package glibivy,pprz /home/vladborza/paparazzi/sw/lib/ocaml/aircraft.ml
 echo OC sd2log.ml
@@ -478,6 +478,7 @@ echo CC sdlogger_download
 gcc -g -O2 -Wall -std=gnu99 -o sdlogger_download sdlogger_download.c
 make -C sw/tools
 DEPEND .depend
+ 
 echo OL find_free_msg_id.ml
 ocamlfind ocamlc -safe-string -g  -o find_free_msg_id.out -package pprz -linkpkg -dllpath-pkg pprz,pprzlink find_free_msg_id.ml
 echo LD mergelogs
@@ -701,6 +702,7 @@ echo OC ivy2serial.ml
 ocamlfind ocamlc -safe-string -g  -package glibivy,pprz -c ivy2serial.ml
 echo OL ivy2serial
 ocamlfind ocamlc -safe-string -g  -o ivy2serial -package glibivy,pprz -linkpkg -dllpath-pkg pprz,pprzlink ivy2serial.cmo
+ 
 echo OL ivy_serial_bridge
 gcc -Wall -fPIC -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/pango-1.0 -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16 -DGTK_DISABLE_DEPRECATED -o ivy_serial_bridge ivy_serial_bridge.c -lglibivy -lglib-2.0 -lpcre -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lharfbuzz -lfontconfig -lfreetype -lpcre
 echo OL app_server
@@ -710,7 +712,6 @@ gcc -Wall -fPIC -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/inc
 gcc -Wall -fPIC -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -o gpsd2ivy gpsd2ivy.c -lglibivy -lglib-2.0 -lpcre -lgps
 make -C /home/vladborza/paparazzi/sw/tools/generators
 DEPEND .depend
- 
 echo OC /home/vladborza/paparazzi/sw/lib/ocaml/xml2h.mli
 ocamlfind ocamlc -safe-string -g  -package pprz -c /home/vladborza/paparazzi/sw/lib/ocaml/xml2h.mli
 echo OC /home/vladborza/paparazzi/sw/lib/ocaml/extXml.mli
@@ -719,6 +720,7 @@ echo OC /home/vladborza/paparazzi/sw/lib/ocaml/airframe.ml
 ocamlfind ocamlc -safe-string -g  -package pprz -c /home/vladborza/paparazzi/sw/lib/ocaml/airframe.ml
 echo OC gen_airframe.ml
 ocamlfind ocamlc -safe-string -g  -package pprz -c gen_airframe.ml
+ 
 echo OC /home/vladborza/paparazzi/sw/lib/ocaml/srtm.mli
 ocamlfind ocamlc -safe-string -g  -package pprz -c /home/vladborza/paparazzi/sw/lib/ocaml/srtm.mli
 echo OC /home/vladborza/paparazzi/sw/lib/ocaml/latlong.mli
@@ -832,11 +834,10 @@ ocamlfind ocamlc -safe-string -g -g  -c -package glibivy,pprz sim.ml
 echo OL sitl.cma
 ocamlmklib -o sitl fg.o simlib.cmo data.cmo flightModel.cmo gps.cmo sitl.cmo sim.cmo /home/vladborza/paparazzi/sw/lib/ocaml/lib-pprz.cma /home/vladborza/paparazzi/var/lib/ocaml/pprzlink/lib-pprzlink.cma
 make -C sw/ground_segment/joystick
- 
 DEPEND .depend
+ 
 echo CC test_sdl_stick.o
 gcc -c -O2 -Wall -fPIC -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I /usr/lib/ocaml test_sdl_stick.c
- 
 echo BUILD test_stick
 gcc -g -O2 -DSTICK_DBG -Wall -fPIC -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -o test_stick test_sdl_stick.o sdl_stick.c -lglib-2.0 -L/usr/lib/x86_64-linux-gnu -lSDL
 echo CC sdl_stick.o
@@ -845,7 +846,6 @@ echo CC ml_sdl_stick.o
 gcc -c -O2 -Wall -fPIC -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I /usr/lib/ocaml ml_sdl_stick.c
 echo BUILD sdl_stick.so
 gcc -shared -o sdl_stick.so sdl_stick.o ml_sdl_stick.o
- 
 echo OC input2ivy.ml
 ocamlfind ocamlc -safe-string -g -c -package pprz,glibivy input2ivy.ml
 echo OL input2ivy
@@ -866,31 +866,29 @@ Q=@ MESSAGES_INCLUDE=/home/vladborza/paparazzi/var/include/pprzlink MESSAGES_LIB
 cp ../../common/C/*.h /home/vladborza/paparazzi/var/include/pprzlink
 cp ./*.h /home/vladborza/paparazzi/var/include/pprzlink
 cp ./*.c /home/vladborza/paparazzi/var/share/pprzlink/src
- 
 echo GENERATE /home/vladborza/paparazzi/var/include/ubx_protocol.h
-PAPARAZZI_SRC=/home/vladborza/paparazzi PAPARAZZI_HOME=/home/vladborza/paparazzi /home/vladborza/paparazzi/sw/tools/generators/gen_ubx.out /home/vladborza/paparazzi/conf/ubx.xml > /tmp/tmp.Q5yV4Gq1a6
-mv /tmp/tmp.Q5yV4Gq1a6 /home/vladborza/paparazzi/var/include/ubx_protocol.h
+PAPARAZZI_SRC=/home/vladborza/paparazzi PAPARAZZI_HOME=/home/vladborza/paparazzi /home/vladborza/paparazzi/sw/tools/generators/gen_ubx.out /home/vladborza/paparazzi/conf/ubx.xml > /tmp/tmp.n6Eu1CLiKX
+mv /tmp/tmp.n6Eu1CLiKX /home/vladborza/paparazzi/var/include/ubx_protocol.h
 chmod a+r /home/vladborza/paparazzi/var/include/ubx_protocol.h
 echo GENERATE /home/vladborza/paparazzi/var/include/mtk_protocol.h
-PAPARAZZI_SRC=/home/vladborza/paparazzi PAPARAZZI_HOME=/home/vladborza/paparazzi /home/vladborza/paparazzi/sw/tools/generators/gen_mtk.out /home/vladborza/paparazzi/conf/mtk.xml > /tmp/tmp.DN8c9eJjIG
-mv /tmp/tmp.DN8c9eJjIG /home/vladborza/paparazzi/var/include/mtk_protocol.h
+PAPARAZZI_SRC=/home/vladborza/paparazzi PAPARAZZI_HOME=/home/vladborza/paparazzi /home/vladborza/paparazzi/sw/tools/generators/gen_mtk.out /home/vladborza/paparazzi/conf/mtk.xml > /tmp/tmp.MuzmB0zDLW
+mv /tmp/tmp.MuzmB0zDLW /home/vladborza/paparazzi/var/include/mtk_protocol.h
 chmod a+r /home/vladborza/paparazzi/var/include/mtk_protocol.h
 echo GENERATE /home/vladborza/paparazzi/var/include/xsens_protocol.h
-PAPARAZZI_SRC=/home/vladborza/paparazzi PAPARAZZI_HOME=/home/vladborza/paparazzi /home/vladborza/paparazzi/sw/tools/generators/gen_xsens.out /home/vladborza/paparazzi/conf/xsens_MTi-G.xml > /tmp/tmp.ndP87jNsyN
-mv /tmp/tmp.ndP87jNsyN /home/vladborza/paparazzi/var/include/xsens_protocol.h
+PAPARAZZI_SRC=/home/vladborza/paparazzi PAPARAZZI_HOME=/home/vladborza/paparazzi /home/vladborza/paparazzi/sw/tools/generators/gen_xsens.out /home/vladborza/paparazzi/conf/xsens_MTi-G.xml > /tmp/tmp.ZHOfmG7NPt
+mv /tmp/tmp.ZHOfmG7NPt /home/vladborza/paparazzi/var/include/xsens_protocol.h
 chmod a+r /home/vladborza/paparazzi/var/include/xsens_protocol.h
+ 
 echo GENERATE /home/vladborza/paparazzi/var/include/abi_messages.h
-PAPARAZZI_SRC=/home/vladborza/paparazzi PAPARAZZI_HOME=/home/vladborza/paparazzi /home/vladborza/paparazzi/sw/tools/generators/gen_abi.out /home/vladborza/paparazzi/conf/abi.xml airborne > /tmp/tmp.KGxrXe9qjl
-mv /tmp/tmp.KGxrXe9qjl /home/vladborza/paparazzi/var/include/abi_messages.h
+PAPARAZZI_SRC=/home/vladborza/paparazzi PAPARAZZI_HOME=/home/vladborza/paparazzi /home/vladborza/paparazzi/sw/tools/generators/gen_abi.out /home/vladborza/paparazzi/conf/abi.xml airborne > /tmp/tmp.na6CtFmLxA
+mv /tmp/tmp.na6CtFmLxA /home/vladborza/paparazzi/var/include/abi_messages.h
 chmod a+r /home/vladborza/paparazzi/var/include/abi_messages.h
 make -C /home/vladborza/paparazzi/sw/ext mavlink
 make -C sw/ext
- 
 if [ -d ../../.git ]; then \
 	cd ../.. && git submodule update --init --recursive sw/ext/libopencm3; \
 fi
 make -C libopencm3 lib PREFIX=arm-none-eabi TARGETS="stm32/f1"
- 
 printf "  GENHDR  include/libopencm3/vf6xx/irq.json\n";
 ./scripts/irq2nvic_h ./include/libopencm3/vf6xx/irq.json;
 printf "  GENHDR  include/libopencm3/lm3s/irq.json\n";
@@ -1036,6 +1034,7 @@ printf "  AR      libopencm3_stm32f1.a\n"
 arm-none-eabi-ar rcs "/home/vladborza/paparazzi/sw/ext/libopencm3/lib/libopencm3_stm32f1.a" adc.o adc_common_v1.o can.o desig.o flash.o gpio.o rcc.o rtc.o timer.o mac.o mac_stm32fxx7.o phy.o phy_ksz8051mll.o crc_common_all.o dac_common_all.o dma_common_l1f013.o gpio_common_all.o i2c_common_v1.o iwdg_common_all.o pwr_common_v1.o spi_common_all.o spi_common_l1f124.o timer_common_all.o usart_common_all.o usart_common_f124.o rcc_common_all.o exti_common_all.o flash_common_f01.o usb.o usb_control.o usb_standard.o usb_msc.o usb_fx07_common.o usb_f107.o st_usbfs_core.o st_usbfs_v1.o vector.o systick.o scb.o nvic.o assert.o sync.o dwt.o
 true
 make -C libopencm3 lib PREFIX=arm-none-eabi FP_FLAGS="-mfloat-abi=softfp -mfpu=fpv4-sp-d16" TARGETS="stm32/f4"
+ 
 printf "  GENHDR  include/libopencm3/vf6xx/irq.json\n";
 ./scripts/irq2nvic_h ./include/libopencm3/vf6xx/irq.json;
 printf "  GENHDR  include/libopencm3/lm3s/irq.json\n";
@@ -1128,7 +1127,6 @@ arm-none-eabi-gcc -Os -Wall -Wextra -Wimplicit-function-declaration -Wredundant-
 printf "  CC      rtc_common_l1f024.c\n"
 arm-none-eabi-gcc -Os -Wall -Wextra -Wimplicit-function-declaration -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes -Wundef -Wshadow -I../../../include -fno-common -mcpu=cortex-m4 -mthumb -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -Wstrict-prototypes -ffunction-sections -fdata-sections -MD -DSTM32F4 -ggdb3 -std=c99  -o rtc_common_l1f024.o -c ../common/rtc_common_l1f024.c
 printf "  CC      spi_common_all.c\n"
- 
 arm-none-eabi-gcc -Os -Wall -Wextra -Wimplicit-function-declaration -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes -Wundef -Wshadow -I../../../include -fno-common -mcpu=cortex-m4 -mthumb -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -Wstrict-prototypes -ffunction-sections -fdata-sections -MD -DSTM32F4 -ggdb3 -std=c99  -o spi_common_all.o -c ../common/spi_common_all.c
 printf "  CC      spi_common_l1f124.c\n"
 arm-none-eabi-gcc -Os -Wall -Wextra -Wimplicit-function-declaration -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes -Wundef -Wshadow -I../../../include -fno-common -mcpu=cortex-m4 -mthumb -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -Wstrict-prototypes -ffunction-sections -fdata-sections -MD -DSTM32F4 -ggdb3 -std=c99  -o spi_common_l1f124.o -c ../common/spi_common_l1f124.c
@@ -1250,7 +1248,6 @@ if [ -d ../../.git ]; then \
 	cd ../.. && git submodule update --init --recursive sw/ext/matrix; \
 fi
 make -C sw/tools/bluegiga_usb_dongle
- 
 gcc -O3 -Wall -c -fmessage-length=0 -DPLATFORM_POSIX -MMD -MP -MF"stubs.d" -MT"stubs.d" -o"stubs.o" "stubs.c"
 gcc -O3 -Wall -c -fmessage-length=0 -DPLATFORM_POSIX -MMD -MP -MF"uart.d" -MT"uart.d" -o"uart.o" "uart.c"
 gcc -O3 -Wall -c -fmessage-length=0 -DPLATFORM_POSIX -MMD -MP -MF"cmd_def.d" -MT"cmd_def.d" -o"cmd_def.o" "cmd_def.c"
@@ -1263,12 +1260,10 @@ gcc -Wall -fPIC -g -c -O2 -Wall -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-
 echo CC davis2ivy
 gcc -Wall -fPIC -g -o davis2ivy davis2ivy.o   -livy
 gcc -Wall -fPIC -g -c -O2 -Wall -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I../../../sw/airborne/ -I../../../sw/include/ -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I../../../sw/ext/libsbp/c/include/ -I../../../sw/airborne/modules/gps/librtcm3/ -I../../../sw/airborne/arch/linux/ kestrel2ivy.c
- 
 echo CC kestrel2ivy
 gcc -Wall -fPIC -g -o kestrel2ivy kestrel2ivy.o   -livy
 gcc -Wall -fPIC -g -c -O2 -Wall -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I../../../sw/airborne/ -I../../../sw/include/ -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I../../../sw/ext/libsbp/c/include/ -I../../../sw/airborne/modules/gps/librtcm3/ -I../../../sw/airborne/arch/linux/ sbp2ivy.c
 gcc -Wall -fPIC -g -c -O2 -Wall -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I../../../sw/airborne/ -I../../../sw/include/ -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I../../../sw/ext/libsbp/c/include/ -I../../../sw/airborne/modules/gps/librtcm3/ -I../../../sw/airborne/arch/linux/ ../../../sw/airborne/arch/linux/serial_port.c
- 
 gcc -Wall -fPIC -g -c -std=c99 -O2 -Wall -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I../../../sw/airborne/ -I../../../sw/include/ -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I../../../sw/ext/libsbp/c/include/ -I../../../sw/airborne/modules/gps/librtcm3/ -I../../../sw/airborne/arch/linux/ ../../../sw/ext/libsbp/c/src/sbp.c
 gcc -Wall -fPIC -g -c -std=c99 -O2 -Wall -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I../../../sw/airborne/ -I../../../sw/include/ -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I../../../sw/ext/libsbp/c/include/ -I../../../sw/airborne/modules/gps/librtcm3/ -I../../../sw/airborne/arch/linux/ ../../../sw/ext/libsbp/c/src/edc.c
 echo CC sbp2ivy
