@@ -69,7 +69,8 @@
     </module>
   </modules>
   <exceptions>
-    <exception cond="(!InsideFlight_Area(GetPosX(), GetPosY()) @OR GetPosAlt() @GT GetAltRef() + 50) @AND (nav_block @GT IndexOfBlock('Standby')) @AND (nav_block @LT IndexOfBlock('Kill landed'))" deroute="Standby"/>
+    <exception cond="(!InsideFlight_Area(GetPosX(), GetPosY()) @OR GetPosAlt() @GT GetAltRef() + 50) 
+    @AND (nav_block @GT IndexOfBlock('Standby')) @AND (nav_block @LT IndexOfBlock('Kill landed'))" deroute="Standby"/>
   </exceptions>
   <blocks>
     <block name="Wait GPS">
@@ -96,7 +97,7 @@
       <attitude pitch="0" roll="0" throttle="0.1" until="stage_time @GT 2" vmode="throttle"/>
       <call_once fun="NavSetWaypointHere(WP_LANDPAD)"/>
       <stay climb="nav_climb_vspeed" vmode="climb" wp="LANDPAD"/>
-    </block>
+    </block>  
     <block name="Standby" pre_call="if(!InsideKill(GetPosX(), GetPosY())) NavKillThrottle();" strip_button="Standby" strip_icon="home.png">
       <set var="mission_nb" value="DROP_NONE"/>
       <stay wp="STDBY"/>
@@ -146,5 +147,7 @@
       <call_once fun="NavKillThrottle()"/>
       <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
     </block>
+
   </blocks>
+
 </flight_plan>
