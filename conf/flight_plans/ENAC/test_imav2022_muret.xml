@@ -13,6 +13,8 @@
     #define DROP_SEARCH   3
     #define DROP_SILENT   4
     #define DROP_TRUCK    5
+    #define SEARCH_UNK    6
+    #define SEARCH_AREA   7
   </header>
   <waypoints>
     <waypoint name="HOME" x="40.256" y="59.629"/>
@@ -21,7 +23,8 @@
     <waypoint name="TAG" x="-25.9" y="38.4"/>
     <waypoint name="DELIVERY" x="-16.2" y="42.9"/>
     <waypoint name="SILENT" x="30.3" y="21.3"/>
-    <waypoint name="UNKNOWN" x="16.5" y="44.3"/>
+    <waypoint name="UNK_TAG" x="26.5" y="40.3"/>
+    <waypoint name="UNK_CENTER" x="16.5" y="44.3"/>
     <waypoint name="SEARCH" x="49.3" y="20.3"/>
     <waypoint name="S1" x="74.0" y="21.5"/>
     <waypoint name="S2" x="65.6" y="0.6"/>
@@ -60,7 +63,9 @@
   <variables>
     <variable init="0" type="int" var="mission_nb"/>
     <variable init="4." var="drop_height" min="0.5" max="15." step="0.1"/>
-    <variable init="5." var="search_height" min="0.5" max="15." step="0.1"/>
+    <variable init="6." var="search_height" min="0.5" max="15." step="0.1"/>
+    <variable init="30." var="search_radius" min="20" max="150." step="1.0"/>
+    <variable init="10." var="search_sweep" min="5." max="20." step="0.1"/>
   </variables>
   <modules>
     <module name="nav" type="survey_rectangle_rotorcraft"/>
@@ -92,6 +97,7 @@
     <block name="Takeoff" strip_button="Takeoff" strip_icon="takeoff.png">
       <exception cond="GetPosHeight() @GT 1.5 @AND mission_nb == DROP_NONE" deroute="Standby"/>
       <exception cond="GetPosHeight() @GT 1.5 @AND mission_nb == DROP_DELIVERY" deroute="Goto Delivery"/>
+      <exception cond="GetPosHeight() @GT 1.5 @AND mission_nb == SEARCH_UNK" deroute="Search Unknown Run"/>
       <call_once fun="NavResurrect()"/>
       <attitude pitch="0" roll="0" throttle="0.1" until="stage_time @GT 2" vmode="throttle"/>
       <call_once fun="NavSetWaypointHere(WP_LANDPAD)"/>
@@ -101,12 +107,27 @@
       <set var="mission_nb" value="DROP_NONE"/>
       <stay wp="STDBY"/>
     </block>
+    <block group="mission" name="Search Unknown" strip_button="Search Unknown">
+      <set var="mission_nb" value="SEARCH_UNK"/>
+      <deroute block="Takeoff"/>
+    </block>
+    <block group="mission" name="Search Unknown Run" strip_button="Search Unknown">
+      <exception cond="tag_tracking.status == TAG_TRACKING_RUNNING" deroute="Search Tag"/>
+      <call_once fun="jevois_stream(false)"/>
+      <call_once fun="NavSetWaypointHere(WP__HERE)"/>
+      <go wp="UNK_CENTER" from="_HERE" hmode="route" height="search_height"/>
+      <call_once fun="jevois_stream(true)"/>
+      <for var="i" from="1" to="search_radius/search_sweep">
+        <circle wp="UNK_CENTER" radius="search_sweep*$i" until="NavCircleCount() @GT 1."/>
+      </for>
+      <deroute block="Land"/>
+    </block>
     <block group="mission" name="Search Tag" strip_button="Search Tag">
       <call_once fun="jevois_stream(true)"/>
       <call_once fun="nav_survey_rectangle_rotorcraft_setup(WP_S1, WP_S3, 1, NS)"/>
-      <deroute block="Search run"/>
+      <deroute block="Search Tag Run"/>
     </block>
-    <block name="Search run">
+    <block name="Search Tag Run">
       <exception cond="rectangle_survey_sweep_num == 1" deroute="Standby"/>
       <call fun="nav_survey_rectangle_rotorcraft_run(WP_S1, WP_S3)"/>
     </block>
