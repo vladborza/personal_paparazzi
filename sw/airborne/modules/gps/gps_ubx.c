@@ -194,6 +194,16 @@ static void gps_ubx_parse_nav_pvt(void)
   gps_ubx.state.hacc        = UBX_NAV_PVT_hAcc(gps_ubx.msg_buf) / 10;
   gps_ubx.state.vacc        = UBX_NAV_PVT_vAcc(gps_ubx.msg_buf) / 10;
   gps_ubx.state.sacc        = UBX_NAV_PVT_sAcc(gps_ubx.msg_buf) / 10;
+
+#if GPS_UBX_USE_PVT_ONLY
+  ecef_of_lla_i(&gps_ubx.state.ecef_pos, &gps_ubx.state.lla_pos);
+  SetBit(gps_ubx.state.valid_fields, GPS_VALID_POS_ECEF_BIT);
+  struct LtpDef_i def;
+  ltp_def_from_lla_i(&def, &gps_ubx.state.lla_pos);
+  ecef_of_ned_vect_i(&gps_ubx.state.ecef_vel, &def, &gps_ubx.state.ned_vel);
+  SetBit(gps_ubx.state.valid_fields, GPS_VALID_VEL_ECEF_BIT);
+  gps_ubx.state.pacc = gps_ubx.state.hacc; // report horizontal accuracy
+#endif
 }
 
 static void gps_ubx_parse_nav_sol(void)

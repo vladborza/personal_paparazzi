@@ -22,10 +22,11 @@
 /**
  * @file modules/nav/nav_survey_poly_rotorcraft.h
  *
+ * Survey polygon for rotorcraft, bases on OSAM survey
  */
 
-#ifndef NAV_SURVEY_POLY_OSAM_H
-#define NAV_SURVEY_POLY_OSAM_H
+#ifndef NAV_SURVEY_POLY_ROTORCRAFT_H
+#define NAV_SURVEY_POLY_ROTORCRAFT_H
 
 #include "std.h"
 
@@ -57,7 +58,9 @@ extern void nav_survey_poly_setup(uint8_t FirstWP, uint8_t Size, float Sweep, fl
  */
 extern void nav_survey_poly_setup_towards(uint8_t FirstWP, uint8_t Size, float Sweep, int SecondWP);
 
-/** Run polygon survey */
-extern bool nav_survey_poly_run(void);
+/** Run polygon survey
+ * @param alt       flight altitude above ground, use entry waypoint alt if negative
+ */
+extern bool nav_survey_poly_run(float alt);
 
 #endif

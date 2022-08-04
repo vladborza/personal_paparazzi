@@ -20,6 +20,14 @@
     #define DROP_TRUCK    5
     #define SEARCH_UNK    6
     #define SEARCH_AREA   7
+
+    #if USE_SONAR
+    #define ActivateSonar() { sonar_adc_sonar_adc_read_status = MODULES_START; }
+    #define DisableSonar() { sonar_adc_sonar_adc_read_status = MODULES_STOP; }
+    #else
+    #define ActivateSonar() {}
+    #define DisableSonar() {}
+    #endif
   </header>
   <waypoints>
     <waypoint name="HOME" x="40.256" y="59.629"/>
@@ -70,10 +78,10 @@
   <variables>
     <variable init="0" type="int" var="mission_nb"/>
     <variable init="4." var="drop_height" min="0.5" max="15." step="0.1"/>
-    <variable init="6." var="search_height" min="0.5" max="15." step="0.1"/>
+    <variable init="5." var="search_height" min="0.5" max="15." step="0.1"/>
     <variable init="30." var="search_radius" min="20" max="150." step="1.0"/>
-    <variable init="10." var="search_sweep" min="5." max="20." step="0.1"/>
-    <variable init="3.5" var="land_height" min="0.5" max="15." step="0.1"/>
+    <variable init="8." var="search_sweep" min="5." max="20." step="0.1"/>
+    <variable init="5." var="land_height" min="0.5" max="15." step="0.1"/>
   </variables>
   <modules>
     <module name="nav" type="survey_poly_rotorcraft" />
@@ -168,6 +176,7 @@
       <go from="S1" hmode="route" wp="SILENT" height="1.5" />
       <call_once fun="DropOpen()"/>
       <go from="SILENT" hmode="route" wp="S2" height="1.5"/>
+      <stay wp="S2" height="drop_height" until="stage_time @GT 3"/>
       <deroute block="Land"/>
     </block>
 
@@ -201,7 +210,7 @@
       <go wp="UNK_CENTER" from="_HERE" hmode="route" height="search_height"/>
       <call_once fun="jevois_stream(true)"/>
       <for var="i" from="1" to="search_radius/search_sweep">
-        <circle wp="UNK_CENTER" radius="search_sweep*$i" until="NavCircleCount() @GT 1."/>
+        <circle wp="UNK_CENTER" radius="search_sweep*$i" height="search_height" until="NavCircleCount() @GT 1."/>
       </for>
       <deroute block="Land"/>
     </block>
@@ -210,18 +219,18 @@
       <set var="mission_nb" value="DROP_NONE"/>
       <call_once fun="NavSetWaypointHere(WP__HERE)"/>
       <call_once fun="jevois_stream(false)"/>
-      <go wp="A1" from="_HERE" hmode="route" height="drop_height"/>
+      <go wp="A1" from="_HERE" hmode="route" height="search_height"/>
       <call_once fun="nav_survey_poly_setup_towards(WP_A1, 4, 10, WP_A2)"/>
       <deroute block="Run Search Area"/>
     </block>
     <block name="Run Search Area">
       <call_once fun="jevois_stream(true)"/>
       <exception cond="PolySurveySweepBackNum > 0" deroute="Land"/>
-      <call fun="nav_survey_poly_run()"/>
+      <call fun="nav_survey_poly_run(search_height)"/>
     </block>
 
     <block name="Drop Package">
-      <stay wp="TAG" until="stage_time @GT 3 @AND tag_tracking.status == TAG_TRACKING_RUNNING" height="drop_height"/>
+      <stay wp="TAG" until="(stage_time @GT 2 @AND tag_tracking.status == TAG_TRACKING_RUNNING) @OR (stage_time @GT 5)" height="drop_height"/>
       <stay wp="TAG" climb="-0.5" vmode="climb" until="stateGetPositionEnu_f()->z @LT 1.5"/>
       <call_once fun="DropOpen()"/>
       <stay wp="TAG" until="stage_time @GT 3" height="drop_height"/>
