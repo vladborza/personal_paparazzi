@@ -233,7 +233,7 @@
     <block name="Land">
       <call_once fun="jevois_stream(false)"/>
       <call_once fun="NavSetWaypointHere(WP__HERE)"/>
-      <go wp="LANDPAD" from="_HERE" hmode="route" height="land_height"/>
+      <go wp="LANDPAD" from="_HERE" hmode="route"/>
     </block>
     <block name="Flare">
       <exception cond="!nav_is_in_flight()" deroute="Kill landed"/>
