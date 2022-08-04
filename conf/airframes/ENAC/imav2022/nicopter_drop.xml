@@ -6,7 +6,7 @@
     * Autopilot:   Tawaki
     * Actuators:   4 in 4 Holybro BLHELI ESC
     * Telemetry:   XBee
-    * GPS:         datalink
+    * GPS:         ublox
     * RC:          Futaba
   </description>
 
@@ -19,19 +19,11 @@
       <module name="radio_control" type="sbus"/>
       <define name="RADIO_KILL_SWITCH" value="RADIO_GAIN1"/>
       <define name="LOW_NOISE_TIME" value="10"/>
-
-      <!-- Use GPS heading instead of magneto -->
-      <configure name="USE_MAGNETOMETER" value="FALSE"/>
-      <define name="AHRS_USE_GPS_HEADING" value="TRUE"/>
-      <module name="ins" type="gps_passthrough"/>
     </target>
 
     <target name="nps" board="pc">
       <module name="fdm" type="jsbsim"/>
       <module name="radio_control" type="ppm"/>
-      <module name="ins" type="extended"/>
-      <configure name="USE_MAGNETOMETER" value="TRUE"/>
-      <define name="AHRS_USE_GPS_HEADING" value="FALSE"/>
     </target>
 
     <module name="telemetry" type="xbee_api"/>
@@ -53,8 +45,9 @@
 
     <module name="gps" type="ublox">
       <configure name="GPS_BAUD" value="B115200"/>
-      <define name="USE_GPS_UBX_RTCM" value="TRUE"/>
+      <!--define name="USE_GPS_UBX_RTCM" value="TRUE"/-->
     </module>
+    <module name="ins" type="extended"/>
     <module name="ahrs" type="int_cmpl_quat"/>
     <module name="air_data"/>
 
@@ -80,6 +73,14 @@
     <module name="actuators" type="pwm"/>
     <module name="switch" type="servo"/>
 
+    <module name="sonar_adc">
+      <configure name="ADC_SONAR" value="ADC_1"/>
+      <!-- <define name="USE_SONAR"/> -->
+      <!--define name="SENSOR_SYNC_SEND_SONAR"/-->
+      <define name="SONAR_SCALE" value="0.0031"/>
+    </module>
+    <module name="agl_dist"/>
+    
     <!--module name="filter" type="1euro_imu">
       <define name="AHRS_ICQ_IMU_ID" value="IMU_F1E_ID"/>
       <define name="AHRS_ALIGNER_IMU_ID" value="IMU_F1E_ID"/>
@@ -257,8 +258,9 @@
 
   <section name="NAV">
     <define name="ARRIVED_AT_WAYPOINT" value="2.0"/>
-    <define name="RECTANGLE_SURVEY_HEADING_WE" value="0."/>
     <define name="NAV_CLIMB_VSPEED" value="1.0"/>
+    <define name="NAV_DESCEND_VSPEED" value="-0.6"/>
+    <define name="RECTANGLE_SURVEY_HEADING_WE" value="0."/>
   </section>
 
   <section name="BAT">
@@ -278,14 +280,27 @@
     <define name="MODE_AUTO2" value="AP_MODE_NAV"/>
   </section>
 
+  <section name="AGL" prefix="AGL_DIST_SONAR_">
+    <define name="ID" value="ABI_BROADCAST"/>
+    <define name="MAX_RANGE" value="6." unit="m"/>
+    <define name="MIN_RANGE" value="0.01" unit="m"/>
+    <define name="FILTER" value="0.15"/> <!--Low pass filter time constant-->
+  </section>
+
+  <section name="TAG_TRACKING" prefix="TAG_TRACKING_">
+    <define name="BODY_TO_CAM_PSI" value="90"/>
+    <define name="CAM_POS_X" value="0.16"/>
+    <define name="CAM_POS_Y" value="0.085"/>
+  </section>
+
   <section name="SWITCH_SERVO" prefix="SWITCH_SERVO_">
     <define name="ON_VALUE" value="1000"/>
     <define name="OFF_VALUE" value="2000"/>
   </section>
 
   <section name="GCS">
-    <define name="ALT_SHIFT_PLUS_PLUS" value="2"/>
-    <define name="ALT_SHIFT_PLUS" value="0.5"/>
+    <define name="ALT_SHIFT_PLUS_PLUS" value="3"/>
+    <define name="ALT_SHIFT_PLUS" value="1"/>
     <define name="ALT_SHIFT_MINUS" value="-0.5"/>
   </section>
 

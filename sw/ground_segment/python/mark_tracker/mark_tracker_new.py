@@ -183,7 +183,7 @@ class Tracker(Ui_MarkTracker):
 
         ''' bind to MARK message '''
         def mark_cb(ac_id, msg):
-            global conf2
+            global conf2, id3
             global correct_id
             global wps
             mark_id = int(msg['ac_id']) # abuse ac_id field
@@ -214,10 +214,10 @@ class Tracker(Ui_MarkTracker):
                     #find id for the selected waypoint to be moved
                     print("WAYPOINTS")
                     for i in wps:
+                        print(i.name, " ", i.no)
                         if(str(self.combo_s3.currentText()) == str(i.name)):
                             no = i.no
                             print("CORRECT ", i.name, ": ", i.no)
-
                     if(int(mark_id) == int(correct_id)):
                         #MISSION 3                        
                         print("DICT HERE: ", self.uav_id)                      
@@ -235,7 +235,10 @@ class Tracker(Ui_MarkTracker):
                         self.commands.append(hist)
 
                         self.connect.ivy.send(str(self.marks_fpl[MARK_S3]))
+
                         
+                        id3 = mark.id
+
                         # update shape position to corresponds its marker
                         mark_update = Mark(no, "S3")
                         mark_update.set_pos(lat, lon, self.alt_ref)
@@ -404,28 +407,26 @@ class Tracker(Ui_MarkTracker):
             self.commands.append(hist)
 
     def clear_pos_label(self, mark):
+        print(mark.id, " ", mark.name, " ", MARK_S1, " ", MARK_S3)
         if(mark.id is not None):
             if(mark.id == MARK_S1):
                 self.pos_s1.setText("lat / lon")
                 id = int(self.id_s1.text())
                 self.id_list.remove(id) 
-                self.id_s1.setText(" - ")  
-                print(self.id_list)             
+                self.id_s1.setText(" - ")            
             if(mark.id == MARK_S2):
                 self.pos_s2.setText("lat / lon")  
                 id = int(self.id_s2.text())
                 self.id_list.remove(id) 
-                self.id_s2.setText(" - ")  
-                print(self.id_list)            
+                self.id_s2.setText(" - ")            
             if(mark.id == MARK_S3):
-                self.pos_s3.setText("lat / lon")   
-                print(self.id_list)        
+                self.pos_s3.setText("lat / lon") 
+                self.id_list.remove(id3)     
             if(mark.id == MARK_S4):
                 self.pos_s4.setText("lat / lon")  
                 id = int(self.id_s4.text())
                 self.id_list.remove(id) 
-                self.id_s4.setText(" - ")   
-                print(self.id_list)                  
+                self.id_s4.setText(" - ")                 
         else:
             hist = "Mark id error"
             self.commands.append(hist)

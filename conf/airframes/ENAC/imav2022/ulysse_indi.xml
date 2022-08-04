@@ -1,6 +1,6 @@
 <!DOCTYPE airframe SYSTEM "../../airframe.dtd">
 
-<airframe name="Quadricopter ANTON Tawaki">
+<airframe name="Quadricopter ULYSSE Tawaki">
 
   <description>
     * Autopilot:   Tawaki
@@ -11,6 +11,7 @@
   </description>
 
   <firmware name="rotorcraft">
+    <!--configure name="RTOS_DEBUG" value="TRUE"/-->
     <configure name="PERIODIC_FREQUENCY" value="1000"/>
     <configure name="AHRS_PROPAGATE_FREQUENCY" value="$(PERIODIC_FREQUENCY)"/>
 
@@ -18,7 +19,6 @@
       <configure name="BARO_PERIODIC_FREQUENCY" value="50"/>
       <module name="radio_control" type="sbus"/>
       <define name="RADIO_KILL_SWITCH" value="RADIO_GAIN1"/>
-      <define name="LOW_NOISE_TIME" value="10"/>
     </target>
 
     <target name="nps" board="pc">
@@ -35,8 +35,10 @@
     </module>
 
     <module name="board" type="tawaki">
-      <define name="IMU_MPU_LOWPASS_FILTER" value="MPU60X0_DLPF_256HZ"/>
-      <define name="IMU_MPU_ACCEL_LOWPASS_FILTER" value="MPU60X0_DLPF_ACC_218HZ"/>
+      <!--define name="IMU_MPU_LOWPASS_FILTER" value="MPU60X0_DLPF_256HZ"/-->
+      <!--define name="IMU_MPU_ACCEL_LOWPASS_FILTER" value="MPU60X0_DLPF_ACC_218HZ"/-->
+      <define name="IMU_MPU_LOWPASS_FILTER" value="MPU60X0_DLPF_98HZ"/>
+      <define name="IMU_MPU_ACCEL_LOWPASS_FILTER" value="MPU60X0_DLPF_ACC_99HZ"/>
       <define name="IMU_MPU_SMPLRT_DIV" value="0"/>
       <!--configure name="BOARD_TAWAKI_ROTATED" value="TRUE"/-->
       <!--configure name="MAG_LIS3MDL_I2C_DEV" value="i2c2"/-->
@@ -60,18 +62,10 @@
     <module name="actuators" type="pwm"/>
     <module name="switch" type="servo"/>
 
-    <module name="filter" type="1euro_imu">
+    <!--module name="filter" type="1euro_imu">
       <define name="AHRS_ICQ_IMU_ID" value="IMU_F1E_ID"/>
       <define name="AHRS_ALIGNER_IMU_ID" value="IMU_F1E_ID"/>
-    </module>
-
-    <module name="sonar_adc">
-      <configure name="ADC_SONAR" value="ADC_1"/>
-      <!-- <define name="USE_SONAR"/> -->
-      <!--define name="SENSOR_SYNC_SEND_SONAR"/-->
-      <define name="SONAR_SCALE" value="0.0031"/>
-    </module>
-    <module name="agl_dist"/>
+    </module-->
 
     <module name="tag_tracking">
       <configure name="JEVOIS_UART" value="UART3" description="UART on which Jevois camera is connected"/>
@@ -82,14 +76,14 @@
   </firmware>
 
   <servos driver="DShot">
-    <servo name="FR" no="3" min="0" neutral="100" max="2000"/>
-    <servo name="BR" no="4" min="0" neutral="100" max="2000"/>
-    <servo name="BL" no="2" min="0" neutral="100" max="2000"/>
-    <servo name="FL" no="1" min="0" neutral="100" max="2000"/>
+    <servo name="FR" no="4" min="0" neutral="100" max="2000"/>
+    <servo name="BR" no="2" min="0" neutral="100" max="2000"/>
+    <servo name="BL" no="1" min="0" neutral="100" max="2000"/>
+    <servo name="FL" no="3" min="0" neutral="100" max="2000"/>
   </servos>
 
   <servos driver="Pwm">
-    <servo name="SWITCH" no="1" min="1000" neutral="1000" max="2000"/>
+    <servo name="SWITCH" no="4" min="1000" neutral="1000" max="2000"/>
   </servos>
 
   <commands>
@@ -101,9 +95,6 @@
 
   <section name="MIXING" prefix="MOTOR_MIXING_">
     <define name="TYPE" value="QUAD_X"/>
-    <define name="TRIM_ROLL" value="0"/>
-    <define name="TRIM_PITCH" value="0"/>
-    <define name="TRIM_YAW" value="0"/>
   </section>
 
   <command_laws>
@@ -114,19 +105,19 @@
   </command_laws>
 
   <section name="IMU" prefix="IMU_">
-    <define name="GYRO_P_SIGN" value="-1"/>
-    <define name="GYRO_Q_SIGN" value="-1"/>
+    <define name="GYRO_P_SIGN" value="1"/>
+    <define name="GYRO_Q_SIGN" value="1"/>
     <define name="GYRO_R_SIGN" value="1"/>
 
-    <define name="ACCEL_X_SIGN" value="-1"/>
-    <define name="ACCEL_Y_SIGN" value="-1"/>
+    <define name="ACCEL_X_SIGN" value="1"/>
+    <define name="ACCEL_Y_SIGN" value="1"/>
     <define name="ACCEL_Z_SIGN" value="1"/>
-    <define name="ACCEL_X_NEUTRAL" value="-90"/>
-    <define name="ACCEL_Y_NEUTRAL" value="40"/>
-    <define name="ACCEL_Z_NEUTRAL" value="12"/>
-    <define name="ACCEL_X_SENS" value="2.321864827044042" integer="16"/>
-    <define name="ACCEL_Y_SENS" value="2.450207588413862" integer="16"/>
-    <define name="ACCEL_Z_SENS" value="2.4560049628471914" integer="16"/>
+    <define name="ACCEL_X_NEUTRAL" value="-27"/>
+    <define name="ACCEL_Y_NEUTRAL" value="75"/>
+    <define name="ACCEL_Z_NEUTRAL" value="-109"/>
+    <define name="ACCEL_X_SENS" value="2.27584739975" integer="16"/>
+    <define name="ACCEL_Y_SENS" value="2.45270163528" integer="16"/>
+    <define name="ACCEL_Z_SENS" value="2.44302118661" integer="16"/>
 
     <define name="MAG_X_SIGN" value="1"/>
     <define name="MAG_Y_SIGN" value="1"/>
@@ -140,14 +131,8 @@
 
     <define name="BODY_TO_IMU_PHI" value="0." unit="deg"/>
     <define name="BODY_TO_IMU_THETA" value="0." unit="deg"/>
-    <define name="BODY_TO_IMU_PSI" value="-45." unit="deg"/>
+    <define name="BODY_TO_IMU_PSI" value="0." unit="deg"/>
   </section>
-
-  <!--section name="MAG">
-    <define name="MAG_TO_IMU_PHI" value="0." unit="deg"/>
-    <define name="MAG_TO_IMU_THETA" value="0." unit="deg"/>
-    <define name="MAG_TO_IMU_PSI" value="-45." unit="deg"/>
-  </section-->
 
   <!-- Magnetic Field Calculator
       http://www.ngdc.noaa.gov/geomag-web/#igrfwmm
@@ -209,6 +194,7 @@
     <define name="USE_ADAPTIVE" value="FALSE"/>
     <define name="ADAPTIVE_MU" value="0.0001"/>
 
+
     <!-- Full INDI -->
     <!-- control effectiveness -->
     <define name="G1_ROLL" value="{-40 , -40, 40 , 40 }"/>
@@ -231,18 +217,18 @@
     <define name="REF_MAX_ZDD" value=" 0.4*9.81"/>
     <define name="REF_MIN_ZD" value="-1.5"/>
     <define name="REF_MAX_ZD" value=" 1."/>
-    <define name="HOVER_KP" value="87"/>
-    <define name="HOVER_KD" value="120"/>
+    <define name="HOVER_KP" value="48"/>
+    <define name="HOVER_KD" value="46"/>
     <define name="HOVER_KI" value="11"/>
-    <define name="NOMINAL_HOVER_THROTTLE" value="0.30"/>
+    <define name="NOMINAL_HOVER_THROTTLE" value="0.48"/>
     <define name="ADAPT_THROTTLE_ENABLED" value="TRUE"/>
     <define name="ADAPT_NOISE_FACTOR" value="1."/>
-    <define name="ADAPT_INITIAL_HOVER_THROTTLE" value="0.25"/>
+    <define name="ADAPT_INITIAL_HOVER_THROTTLE" value="0.4"/>
   </section>
 
   <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
     <define name="MAX_BANK" value="20" unit="deg"/>
-    <define name="PGAIN" value="40"/>
+    <define name="PGAIN" value="41"/>
     <define name="DGAIN" value="108"/>
     <define name="IGAIN" value="20"/>
     <define name="NGAIN" value="0"/>
