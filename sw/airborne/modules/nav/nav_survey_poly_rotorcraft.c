@@ -304,8 +304,14 @@ void nav_survey_poly_setup(uint8_t EntryWP, uint8_t Size, float sw, float Orient
 }
 
 //=========================================================================================================================
-bool nav_survey_poly_run(void)
+bool nav_survey_poly_run(float alt)
 {
+
+  if (alt < 0.f) {
+    NavVerticalAltitudeMode(waypoints[SurveyEntryWP].enu_f.z, 0.);
+  } else {
+    NavVerticalAltitudeMode(alt, 0.);
+  }
 
   #ifdef NAV_SURVEY_POLY_DYNAMIC
   dSweep = (nav_survey_shift > 0 ? Poly_Distance : -Poly_Distance);

@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
+
+<flight_plan alt="190" ground_alt="185" lat0="52.171490" lon0="4.417461" max_dist_from_home="610" name="Delft safety" security_height="1">
+  <header>
+    #ifndef SwitchServoOff
+    #define SwitchServoOff(_x) {}
+    #endif
+
+    #define DROP_NONE     0
+    #define DROP_DELIVERY 1
+    #define DROP_UNKNOWN  2
+    #define DROP_SEARCH   3
+    #define DROP_SILENT   4
+    #define DROP_TRUCK    5
+  </header>
+  <waypoints>
+    <waypoint name="HOME" lat = "52.170448" lon = "4.418138"/>
+    <waypoint name="STDBY" lat = "52.171457" lon = "4.417213"/>
+    <waypoint name="LANDPAD" lat = "52.171691" lon = "4.416777"/>
+    <waypoint name="TAG" lat = "52.1706972" lon = "4.4205922"/>
+    <waypoint name="DELIVERY" lat = "52.171387" lon = "4.420618"/>
+    <waypoint name="SILENT1" lat = "52.170793" lon = "4.418407"/>
+    <waypoint name="SILENT" lat = "52.170707" lon = "4.418157"/>
+    <waypoint name="SILENT2" lat = "52.170620" lon = "4.417906"/>
+    <waypoint name="UNKNOWN" lat = "52.169916" lon = "4.415763"/>
+    <waypoint name = "P1" lat = "52.169221" lon = "4.415347" />
+    <waypoint name = "P2" lat = "52.171357" lon = "4.421790" />
+    <waypoint name = "R1" lat="52.167796" lon="4.414780" />
+    <waypoint name = "R2" lat="52.170170" lon="4.420680" />
+    <waypoint name = "R3" lat="52.169581" lon="4.421346" />
+    <waypoint name = "R4" lat="52.167203" lon="4.415598" />
+    <waypoint name = "SEARCH" lat = "52.1683466" lon = "4.4168985"/>
+    <waypoint name = "D1" lat = "52.168043" lon = "4.412970"/>
+    <waypoint name = "D2" lat = "52.171484" lon = "4.423171"/>
+    <waypoint name = "D3" lat = "52.170171" lon = "4.423786"/>
+    <waypoint name = "D4" lat = "52.166332" lon = "4.415778"/>
+    <waypoint name = "D5" lat = "52.167008" lon = "4.413522" />
+    <waypoint name = "TRUCK" lat = "52.171626" lon="4.417294" />
+    <waypoint name = "_T1" lat = "52.171974" lon = "4.417091" />
+    <waypoint name = "_T2" lat = "52.171345" lon = "4.417542" />
+    <waypoint name = "_T3" lat = "52.171776" lon = "4.419102" />
+    <waypoint name = "_T4" lat = "52.172411" lon = "4.418629" />
+    <waypoint name="_FLY1" lat = "52.171802" lon = "4.416334"/>
+    <waypoint name="_FLY2" lat = "52.171304" lon = "4.416656"/>
+    <waypoint name="_FLY3" lat = "52.169382" lon = "4.411033"/>
+    <waypoint name="_FLY4" lat = "52.166893" lon = "4.412582"/>
+    <waypoint name="_FLY5" lat = "52.165784" lon="4.415897"/>
+    <waypoint name="_FLY6" lat = "52.170042" lon="4.424667"/>
+    <waypoint name="_FLY7" lat = "52.173695" lon="4.423244"/>
+    <waypoint name="_KILL1" lat = "52.171809" lon = "4.416234"/>
+    <waypoint name="_KILL2" lat = "52.171331" lon = "4.416569"/>
+    <waypoint name="_KILL3" lat = "52.169403" lon = "4.410566"/>
+    <waypoint name="_KILL4" lat = "52.166762" lon = "4.412007"/>
+    <waypoint name="_KILL5" lat = "52.165493" lon = "4.415941"/>
+    <waypoint name="_KILL6" lat = "52.169922" lon = "4.425183"/>
+    <waypoint name="_KILL7" lat = "52.173795" lon = "4.423437"/>
+    <waypoint name="_HERE" lat = "52.171786" lon="4.416905"/>
+  </waypoints>
+  <sectors>
+    <sector color="purple" name="Truck">
+      <corner name="_T1"/>
+      <corner name="_T2"/>
+      <corner name="_T3"/>
+      <corner name="_T4"/>
+    </sector>
+    <sector color="yellow" name="Search_Rectangle">
+      <corner name="R1"/>
+      <corner name="R2"/>
+      <corner name="R3"/>
+      <corner name="R4"/>
+    </sector>
+    <sector color="green" name="Survey">
+      <corner name="D1"/>
+      <corner name="D2"/>
+      <corner name="D3"/>
+      <corner name="D4"/>
+      <corner name="D5"/>
+    </sector>
+    <sector color="orange" name="Flight_Area">
+      <corner name="_FLY1"/>
+      <corner name="_FLY2"/>
+      <corner name="_FLY3"/>
+      <corner name="_FLY4"/>
+      <corner name = "_FLY5" />
+      <corner name = "_FLY6" />
+      <corner name = "_FLY7" />
+    </sector>
+    <sector color="red" name="Kill">
+      <corner name="_KILL1"/>
+      <corner name="_KILL2"/>
+      <corner name="_KILL3"/>
+      <corner name="_KILL4"/>
+      <corner name="_KILL5"/>
+      <corner name="_KILL6"/>
+      <corner name="_KILL7"/>
+    </sector>
+  </sectors>
+  <variables>
+    <variable init="0" type="int" var="mission_nb"/>
+    <variable init="4." var="drop_height" min="0.5" max="15." step="0.1"/>
+    <variable init="5." var="search_height" min="0.5" max="15." step="0.1"/>
+  </variables>
+  <modules>
+    <module name="nav" type="survey_rectangle_rotorcraft"/>
+    <module name = "nav" type = "survey_poly_rotorcraft" />
+    <module name="tag_tracking">
+      <define name="TAG_TRACKING_SIM_WP" value="WP_DELIVERY"/>
+    </module>
+  </modules>
+  <exceptions>
+    <exception cond="(!InsideFlight_Area(GetPosX(), GetPosY()) @OR GetPosAlt() @GT GetAltRef() + 50) 
+    @AND (nav_block @GT IndexOfBlock('Standby')) @AND (nav_block @LT IndexOfBlock('Kill landed'))" deroute="Standby"/>
+  </exceptions>
+<blocks>
+    <block name="Wait GPS">
+      <call_once fun="NavKillThrottle()"/>
+      <while cond="!GpsFixValid()"/>
+    </block>
+    <block name="Geo init">
+      <while cond="LessThan(NavBlockTime(), 10)"/>
+      <!--call_once fun="NavSetGroundReferenceHere()"/-->
+      <call_once fun="NavSetAltitudeReferenceHere()"/>
+    </block>
+    <block name="Holding point">
+      <call_once fun="NavKillThrottle()"/>
+      <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
+    </block>
+    <block name="Start Engine">
+      <call_once fun="NavResurrect()"/>
+      <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
+    </block>
+    <block name="Takeoff" strip_button="Takeoff" strip_icon="takeoff.png">
+      <exception cond="GetPosHeight() @GT 1.5 @AND mission_nb == DROP_NONE" deroute="Standby"/>
+      <exception cond="GetPosHeight() @GT 1.5 @AND mission_nb == DROP_DELIVERY" deroute="Goto Delivery"/>
+      <exception cond = "GetPosHeight() @GT 1.5 @AND mission_nb == DROP_SILENT" deroute = "S4 Drop" />
+      <exception cond = "GetPosHeight() @GT 1.5 @AND mission_nb == DROP_UNKNOWN" deroute = "S3 Search Setup" />
+      <call_once fun="NavResurrect()"/>
+      <attitude pitch="0" roll="0" throttle="0.1" until="stage_time @GT 2" vmode="throttle"/>
+      <call_once fun="NavSetWaypointHere(WP_LANDPAD)"/>
+      <stay climb="nav_climb_vspeed" vmode="climb" wp="LANDPAD"/>
+    </block>
+    <block name="Standby" pre_call="if(!InsideKill(GetPosX(), GetPosY())) NavKillThrottle();" strip_button="Standby" strip_icon="home.png">
+      <set var="mission_nb" value="DROP_NONE"/>
+      <stay wp="STDBY"/>
+    </block>
+    <block group="mission" name="Search Tag" strip_button="Search Tag">
+      <call_once fun="jevois_stream(true)"/>
+      <call_once fun="nav_survey_rectangle_rotorcraft_setup(WP_D1, WP_D3, 1, NS)"/>
+      <deroute block="Search run"/>
+    </block>
+    <block name="Search run">
+      <exception cond="rectangle_survey_sweep_num == 1" deroute="Standby"/>
+      <call fun="nav_survey_rectangle_rotorcraft_run(WP_D1, WP_D3)"/>
+    </block>
+    <block group="mission" name="Start Delivery" strip_button="Delivery">
+      <set var="mission_nb" value="DROP_DELIVERY"/>
+      <deroute block="Takeoff"/>
+    </block>   
+
+    <block group = "mission" name = "S3 Search Start">
+      <set var = "mission_nb" value = "DROP_UNKNOWN"/>
+      <deroute block="Takeoff"/>
+    </block>
+    <block group = "mission" name = "S3 Search Setup">
+      <call_once fun = "jevois_stream(true)"/>
+      <call_once fun = "nav_survey_poly_setup_towards(WP_R1, 4, 10, WP_R2)"/>
+      <deroute block = "S3 Search"/>
+    </block>
+    <block group="mission" name="S3 Search">
+      <exception cond="(PolySurveySweepBackNum > 0)" deroute="Land"/>
+      <!-- <call_once fun = "NavSetWaypointHere(WP__HERE)"/>     -->
+      <call fun = "nav_survey_poly_run()"/>
+    </block>
+
+    <block group = "mission" name = "S4 Start Delivery" strip_button = "Silent Delivery">
+      <set var = "mission_nb" value = "DROP_SILENT"/>
+      <deroute block = "Takeoff" />
+    </block>
+    <block group = "mission" name = "S4 Drop" strip_button = "Drop Silent">
+      <call_once fun = "NavSetWaypointHere(WP__HERE)"/>
+      <go from = "_HERE" hmode = "route" wp = "SILENT1" height = "drop_height"/>
+      <stay wp = "SILENT1" climb = "-1.0" vmode = "climb" until = "GetPosAlt() @LEQ  GetAltRef() + 1.5"/>
+      <go from = "SILENT1" hmode = "route" wp = "SILENT" height = "drop_height - 3.5" />
+      <call_once fun = "SwitchServoOff()"/>
+      <go from = "SILENT" hmode = "route"  wp = "SILENT2" height = "drop_height"/> <!-- vmode = "climb" -->
+      <!-- <stay wp = "SILENT2" climb = "1.0" vmode = "climb" until = "GetPosAlt() @GT GetAltRef() + 6.0" /> -->
+      <go from = "SILENT2" hmode = "route" wp = "LANDPAD" />
+      <deroute block = "Land"/>
+    </block>
+
+    <block name="Goto Delivery">
+      <set var="mission_nb" value="DROP_NONE"/>
+      <call_once fun="NavSetWaypointHere(WP__HERE)"/>
+      <call_once fun="jevois_stream(false)"/>
+      <go wp="DELIVERY" from="_HERE" hmode="route" height="drop_height"/>
+      <call_once fun="NavSetWaypointHere(WP_TAG)"/>
+      <call_once fun="jevois_stream(true)"/>
+      <stay wp="DELIVERY" until="(tag_tracking.status == TAG_TRACKING_RUNNING) @OR (stage_time @GT 15)" height="drop_height"/>
+      <deroute block="Drop Package"/>
+    </block>
+    <block name="Drop Package">
+      <stay wp="TAG" until="stage_time @GT 3 @AND tag_tracking.status == TAG_TRACKING_RUNNING" height="drop_height"/>
+      <stay wp="TAG" climb="-0.5" vmode="climb" until="stateGetPositionEnu_f()->z @LT 1.5"/>
+      <call_once fun="SwitchServoOff()"/>
+      <stay wp="TAG" until="stage_time @GT 3" height="drop_height"/>
+      <deroute block="Land"/>
+    </block>
+
+    <block name="Land here" strip_button="Land here" strip_icon="land-right.png">
+      <call_once fun="NavSetWaypointHere(WP_LANDPAD)"/>
+    </block>
+    <block name="Land">
+      <call_once fun="NavSetWaypointHere(WP__HERE)"/>
+      <go wp="LANDPAD" from="_HERE" hmode="route"/>
+    </block>
+    <block name="Flare">
+      <exception cond="!nav_is_in_flight()" deroute="Kill landed"/>
+      <stay climb="nav_descend_vspeed" vmode="climb" wp="LANDPAD"/>
+    </block>
+    <block name="Kill landed">
+      <call_once fun="NavKillThrottle()"/>
+      <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
+    </block>
+  </blocks>
+</flight_plan>
