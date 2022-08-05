@@ -380,7 +380,6 @@ static void gps_ubx_parse_nav_relposned(void)
     uint8_t gnssFixOK   = RTCMgetbitu(&flags, 7, 1);
 
     /* Only save the latest valid relative position */
-    if(relPosValid) {
       if (diffSoln && carrSoln == 2) {
         gps_ubx.state.fix = 5; // rtk
       } else if(diffSoln && carrSoln == 1) {
@@ -390,6 +389,7 @@ static void gps_ubx_parse_nav_relposned(void)
       } else{
         gps_ubx.state.fix = 0;
       }
+    if(relPosValid) {
 
       gps_relposned.iTOW          = UBX_NAV_RELPOSNED_iTOW(gps_ubx.msg_buf);
       gps_relposned.refStationId  = UBX_NAV_RELPOSNED_refStationId(gps_ubx.msg_buf);

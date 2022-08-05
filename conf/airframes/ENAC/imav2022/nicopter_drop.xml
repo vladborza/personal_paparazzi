@@ -76,7 +76,7 @@
     <module name="sonar_adc">
       <configure name="ADC_SONAR" value="ADC_1"/>
       <!-- <define name="USE_SONAR"/> -->
-      <!--define name="SENSOR_SYNC_SEND_SONAR"/-->
+      <define name="SENSOR_SYNC_SEND_SONAR"/>
       <define name="SONAR_SCALE" value="0.0031"/>
     </module>
     <module name="agl_dist"/>
