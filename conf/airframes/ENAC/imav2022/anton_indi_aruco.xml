@@ -43,7 +43,7 @@
     </module>
     <module name="gps" type="ublox">
       <configure name="GPS_BAUD" value="B115200"/>
-      <!--define name="USE_GPS_UBX_RTCM" value="TRUE"/-->
+      <define name="USE_GPS_UBX_RTCM" value="TRUE"/>
     </module>
 
     <module name="stabilization" type="indi"/>
@@ -53,7 +53,7 @@
       <define name="GUIDANCE_INDI_RC_DEBUG" value="FALSE"/>
     </module>
 
-    <module name="ins"/>
+    <module name="ins" type="extended"/>
     <module name="ahrs" type="int_cmpl_quat"/>
     <module name="air_data"/>
 
@@ -67,9 +67,9 @@
 
     <module name="sonar_adc">
       <configure name="ADC_SONAR" value="ADC_1"/>
-      <!-- <define name="USE_SONAR"/> -->
+      <define name="USE_SONAR"/>
       <!--define name="SENSOR_SYNC_SEND_SONAR"/-->
-      <define name="SONAR_SCALE" value="0.0031"/>
+      <define name="SONAR_SCALE" value="0.0025"/> <!-- Vcc/1024 per cm => (3.3/2^12)*(0.01/(3.3/2^10) = 0.01*2^10/2^12 -->
     </module>
     <module name="agl_dist"/>
 

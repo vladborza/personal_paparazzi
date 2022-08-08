@@ -195,23 +195,19 @@ static void gps_ubx_parse_nav_pvt(void)
   gps_ubx.state.vacc        = UBX_NAV_PVT_vAcc(gps_ubx.msg_buf) / 10;
   gps_ubx.state.sacc        = UBX_NAV_PVT_sAcc(gps_ubx.msg_buf) / 10;
 
-#if GPS_UBX_USE_PVT_ONLY
-  ecef_of_lla_i(&gps_ubx.state.ecef_pos, &gps_ubx.state.lla_pos);
-  SetBit(gps_ubx.state.valid_fields, GPS_VALID_POS_ECEF_BIT);
-  struct LtpDef_i def;
-  ltp_def_from_lla_i(&def, &gps_ubx.state.lla_pos);
-  ecef_of_ned_vect_i(&gps_ubx.state.ecef_vel, &def, &gps_ubx.state.ned_vel);
-  SetBit(gps_ubx.state.valid_fields, GPS_VALID_VEL_ECEF_BIT);
+  //FIXME stupid workaround for PVT only
   gps_ubx.state.pacc = gps_ubx.state.hacc; // report horizontal accuracy
-#endif
 }
 
 static void gps_ubx_parse_nav_sol(void)
 {
   // Copy time and fix information
-#if !USE_GPS_UBX_RTCM
-  gps_ubx.state.fix        = UBX_NAV_SOL_gpsFix(gps_ubx.msg_buf);
-#endif
+  uint8_t fix = UBX_NAV_SOL_gpsFix(gps_ubx.msg_buf);
+  if ((fix == GPS_FIX_3D && fix > gps_ubx.state.fix) || fix < GPS_FIX_3D) {
+    // update only if fix is better than current or fix not 3D
+    // leaving fix if in GNSS or RTK mode
+    gps_ubx.state.fix = fix;
+  }
   gps_ubx.state.tow        = UBX_NAV_SOL_iTOW(gps_ubx.msg_buf);
   gps_ubx.state.week       = UBX_NAV_SOL_week(gps_ubx.msg_buf);
   gps_ubx.state.num_sv     = UBX_NAV_SOL_numSV(gps_ubx.msg_buf);
@@ -361,9 +357,12 @@ static void gps_ubx_parse_nav_sat(void)
 
 static void gps_ubx_parse_nav_status(void)
 {
-#if !USE_GPS_UBX_RTCM
-  gps_ubx.state.fix     = UBX_NAV_STATUS_gpsFix(gps_ubx.msg_buf);
-#endif
+  uint8_t fix = UBX_NAV_SOL_gpsFix(gps_ubx.msg_buf);
+  if ((fix == GPS_FIX_3D && fix > gps_ubx.state.fix) || fix < GPS_FIX_3D) {
+    // update only if fix is better than current or fix not 3D
+    // leaving fix if in GNSS or RTK mode
+    gps_ubx.state.fix = fix;
+  }
   gps_ubx.state.tow     = UBX_NAV_STATUS_iTOW(gps_ubx.msg_buf);
   gps_ubx.status_flags  = UBX_NAV_STATUS_flags(gps_ubx.msg_buf);
 }
@@ -380,7 +379,6 @@ static void gps_ubx_parse_nav_relposned(void)
     uint8_t gnssFixOK   = RTCMgetbitu(&flags, 7, 1);
 
     /* Only save the latest valid relative position */
-    if(relPosValid) {
       if (diffSoln && carrSoln == 2) {
         gps_ubx.state.fix = 5; // rtk
       } else if(diffSoln && carrSoln == 1) {
@@ -390,6 +388,7 @@ static void gps_ubx_parse_nav_relposned(void)
       } else{
         gps_ubx.state.fix = 0;
       }
+    if(relPosValid) {
 
       gps_relposned.iTOW          = UBX_NAV_RELPOSNED_iTOW(gps_ubx.msg_buf);
       gps_relposned.refStationId  = UBX_NAV_RELPOSNED_refStationId(gps_ubx.msg_buf);

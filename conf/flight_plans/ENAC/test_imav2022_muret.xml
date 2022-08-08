@@ -172,10 +172,10 @@
       <call_once fun="NavSetWaypointHere(WP__HERE)"/>
       <call_once fun="jevois_stream(false)"/>
       <go from="_HERE" hmode="route" wp="S1" height="drop_height"/>
-      <stay wp="S1" climb="nav_descend_vspeed" vmode="climb" until="GetPosAlt() @LEQ GetAltRef() + 2."/>
-      <go from="S1" hmode="route" wp="SILENT" height="1.5" />
+      <stay wp="S1" climb="nav_descend_vspeed" vmode="climb" until="GetPosAlt() @LEQ GetAltRef() + 3."/>
+      <go from="S1" hmode="route" wp="SILENT" height="2.5" />
       <call_once fun="DropOpen()"/>
-      <go from="SILENT" hmode="route" wp="S2" height="1.5"/>
+      <go from="SILENT" hmode="route" wp="S2" height="2.5"/>
       <stay wp="S2" height="drop_height" until="stage_time @GT 3"/>
       <deroute block="Land"/>
     </block>
@@ -204,7 +204,7 @@
 
     <block name="Run Search Unknown">
       <set var="mission_nb" value="DROP_NONE"/>
-      <exception cond="tag_tracking.status == TAG_TRACKING_RUNNING" deroute="Land"/>
+      <exception cond="tag_tracking.status == TAG_TRACKING_RUNNING" deroute="Drop Package"/>
       <call_once fun="jevois_stream(false)"/>
       <call_once fun="NavSetWaypointHere(WP__HERE)"/>
       <go wp="UNK_CENTER" from="_HERE" hmode="route" height="search_height"/>
